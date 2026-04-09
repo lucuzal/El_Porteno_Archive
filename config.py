@@ -1,15 +1,18 @@
 import os
 from dataclasses import dataclass
+from dotenv import load_dotenv
 
 @dataclass
 class Config:
     """Configuración de la aplicación"""
 
     #Conf. DB
-    DB_HOST: str = os.getenv("DB_HOST", "localhost")
-    DB_NAME: str = os.getenv("DB_NAME", "ElPorteno")
-    DB_USER: str = os.getenv("DB_USER", "root")
-    DB_PASSWORD: str = os.getenv("DB_PASSWORD", "placeres88")
+    load_dotenv()
+
+    DB_HOST: str = os.getenv("DB_HOST")
+    DB_NAME: str = os.getenv("DB_NAME")
+    DB_USER: str = os.getenv("DB_USER")
+    DB_PASSWORD: str = os.getenv("DB_PASSWORD")
 
     # Necesarios para la visualización y API:
 

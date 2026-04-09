@@ -6799,3 +6799,22 @@ AttributeError: 'DialogNotas' object has no attribute 'set_widgets_como_editable
 2026-04-08 13:13:20,550 - __main__ - INFO - 72 - Ventana principal mostrada - Se inicia Main loop
 2026-04-08 13:13:23,191 - database.connection - INFO - 37 - Conexión cerrada
 2026-04-08 13:13:23,192 - __main__ - INFO - 77 - === Aplicación finalizada correctamente ===
+2026-04-09 18:30:40,613 - __main__ - INFO - 56 - === Iniciando la aplicación ===
+2026-04-09 18:30:40,614 - __main__ - INFO - 28 - Iniciando configuración de la aplicación El Porteño - Index
+- Versión: 3.0.0
+2026-04-09 18:30:40,726 - database.connection - INFO - 26 - Conexión establecida
+2026-04-09 18:30:40,726 - __main__ - INFO - 64 - Creando ventana principal
+2026-04-09 18:30:40,727 - ui.main_window - INFO - 35 - Creando widgets en MainWindow
+2026-04-09 18:30:40,728 - ui.main_window - INFO - 63 - --- CREANDO PÁGINA REVISTAS ---
+2026-04-09 18:30:40,751 - ui.main_window - INFO - 230 - --- FINALIZADA PÁGINA REVISTAS ---
+2026-04-09 18:30:40,751 - ui.main_window - INFO - 236 - --- CREANDO PÁGINA AUTORES ---
+2026-04-09 18:30:40,758 - ui.main_window - INFO - 358 - --- FINALIZADA PÁGINA AUTORES ---
+2026-04-09 18:30:40,758 - ui.main_window - INFO - 363 - --- CREANDO PÁGINA TEMAS ---
+2026-04-09 18:30:40,763 - ui.main_window - INFO - 424 - --- FINALIZADA PÁGINA TEMAS ---
+2026-04-09 18:30:40,763 - ui.main_window - INFO - 429 - --- CREANDO PÁGINA ANALISIS ---
+2026-04-09 18:30:40,768 - ui.main_window - INFO - 493 - --- FINALIZADA PÁGINA ANALISIS ---
+2026-04-09 18:30:40,768 - ui.main_window - INFO - 495 - --- INICIO PROCEDIMIENTOS INCIALES ---
+2026-04-09 18:30:40,769 - ui.main_window - INFO - 497 - --- FIN DE MAIN WINDOW ---
+2026-04-09 18:30:41,031 - __main__ - INFO - 72 - Ventana principal mostrada - Se inicia Main loop
+2026-04-09 18:30:47,899 - database.connection - INFO - 37 - Conexión cerrada
+2026-04-09 18:30:47,900 - __main__ - INFO - 77 - === Aplicación finalizada correctamente ===
