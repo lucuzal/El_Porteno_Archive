@@ -12,10 +12,14 @@ import html
 
 #Config. GTK
 
+# devuelve un número binario que se corresponde a un número del hexagrama del I-CHING
+
 def get_binario_hexagrama(numero_hexagrama: int):
     columna = f"h{numero_hexagrama}"
     binario = config.HEXAGRAMA[columna]
     return binario
+
+# devuelve 
 
 def get_lineas_hexagrama(binario_hexagrama: str):
     lineas = ""

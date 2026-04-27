@@ -6,7 +6,6 @@ import re
 from gi.repository import Gtk, Gdk, GdkPixbuf
 import logging
 
-#from mysql.opentelemetry.importlib_metadata import pass_none
 
 import utils
 import webbrowser as wb
@@ -16,14 +15,15 @@ from services import DBService, RevistaServices, NotaServices, AutorServices, Te
 from models import Revista, Hexagrama, StaffMiembro, Carta, Nota, Autor, Tema, ArchivoResumen
 from config import config
 from ui.dialogs import DialogCorreo
-#from ui.notas_window import DialogNotas
+from ui.notas_window import DialogNotas
+from application_state import EstadoDeAplicacion
 
 # Config. logging
 logger = logging.getLogger(__name__)
 
 class MainWindow(Gtk.Window):
 
-    def __init__(self, app_state):
+    def __init__(self, app_state: EstadoDeAplicacion):
         Gtk.Window.__init__(self, title="Base de datos de la Revista El Porteño")
         self.set_border_width(10)
         self.app_state = app_state
@@ -506,10 +506,10 @@ class MainWindow(Gtk.Window):
         self.ent_buscar_nota_por_id_en_revista.connect("activate", self.ent_buscar_id_activate) #P1 - Enter Buscar Id
         self.sb_numero_revista.connect("value-changed", self.sb_numero_revista_valuechanged) #P1 Spin buton change
         self.sb_hexagrama.connect("value-changed", self.sb_hexagrama_valuechanged) #P1 Hexagrama change
-        self.vn_revista.tn.connect("row-activated", self.vn_revista_row_activate) #P1 Visualizador de notas
+        self.vn_revista.tn.connect("row-activated", self.vn_revista_row_activate) #P1 Visualizador de notas -> ingreso a nota
         self.vn_revista.connect("new_resumen", self.on_new_archivo_resumen)
         self.eventbox_im_tapa.connect("button_press_event", self.eventbox_im_tapa_clicked) #P1 Tapa click
-        self.bt_staff.connect("clicked", self.bt_staff_clicked) #P1 Staff Click
+        self.bt_staff.connect("clicked", self.bt_staff_clicked) #P1 Boton Staff Click
         self.ent_buscar_autor.connect("changed", self.ent_buscar_autor_changed) #P2 Buscar Autor
         self.list_autores.connect("row-activated", self.list_autores_row_activate) #P2 Listado de autores, activar
         self.vn_autor.tn.connect("row-activated", self.vn_autor_row_activate) #P2 Visualizador de notas
@@ -937,6 +937,15 @@ class MainWindow(Gtk.Window):
         self.up_label_nota_a_cargar_en_grupo_analisis()
         self.set_widgets_analisis_como_editables(False)
 
+    def lanzar_notas_windows(self):
+        window_nota = DialogNotas(self.app_state)
+        window_nota.set_transient_for(self)
+        window_nota.set_modal(True)
+        # Conectar señal de cierre
+        window_nota.connect("destroy", self.on_nota_window_destroy)
+        window_nota.show_all()
+
+
     def up_label_nota_a_cargar_en_grupo_analisis(self, label: str = ""):
         if len(label) > 70:
             label = label[0:70] + "..."
@@ -978,13 +987,7 @@ class MainWindow(Gtk.Window):
 
 
     def bt_agregar_nota_en_revista_clicked(self, widget):
-        pass
-        # window_nota = DialogNotas(self.app_state)
-        # window_nota.set_transient_for(self)
-        # window_nota.set_modal(True)
-        # # Conectar señal de cierre
-        # window_nota.connect("destroy", self.on_nota_window_destroy)
-        # window_nota.show_all()
+        self.lanzar_notas_windows()
 
     def bt_cartas_en_revista_clicked(self, widget):
         window_correo = DialogCorreo(self.app_state)
@@ -1025,7 +1028,9 @@ class MainWindow(Gtk.Window):
             self.run_text_editor_in_window(archivo_resumen)
         else:
             id_nota = model.get_value(i, 0)
-            print(f"se hizo click en la nota {id_nota}")
+            self.app_state.nota_seleccionada = self.app_state.revista_seleccionada.buscar_nota_por_id(id_nota)
+            self.lanzar_notas_windows()
+
 
     def on_new_archivo_resumen(self, widget, id_nota):
         if widget == self.vn_revista:
@@ -1308,7 +1313,7 @@ class MainWindow(Gtk.Window):
         pass
 
     def on_nota_window_destroy(self, window):
-        pass
+        self.app_state.nota_seleccionada = None
 
     # FINALIZAR
 

@@ -46,10 +46,10 @@ class Nota:
         self.relacionado_sexualidad = nota['relevante_sexualidad']
         self.relacionado_memoria = nota['relevante_testimonio']
         self.comentarios = nota['comentarios']
-        self.autores = []
-        self.temas = []
-        self.categorias = []
-        self.analisis = []
+        self.autores = set()
+        self.temas = set()
+        self.categorias = set()
+        self.analisis = set()
 
 
 class Revista:
@@ -65,11 +65,16 @@ class Revista:
         self.formato = numero['formato_en_archivo']
         self.comentarios = numero['comentarios']
         self.precio = numero['precio_nominal'] if numero['precio_nominal'] else ""
-        self.staff = []
-        self.notas = []
-        self.correo = []
+        self.staff: list[StaffMiembro] = []
+        self.notas: list[Nota] = []
+        self.correo: list[Carta] = []
         self.estado = None
 
+    def buscar_nota_por_id(self, id: int):
+        for n in self.notas:
+            if n.id == id:
+                return n
+        return None
 
 class StaffMiembro:
 
