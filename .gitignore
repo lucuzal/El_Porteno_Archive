@@ -18,5 +18,5 @@
 **/.env
 **/Analisis_R
 **/certs
-**/app.log
+app.log
 **/database/elporteno_backup.sql

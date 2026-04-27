@@ -285,14 +285,14 @@ class NotaServices:
         autores = NotaServices.get_autor_de_nota(nota.id)
         for elemento in autores:
             autor = Autor(elemento)
-            nota.autores.append(autor)
+            nota.autores.add(autor)
 
     @staticmethod
     def cargar_categorias(nota: Nota):
         categorias = NotaServices.get_categorias(nota.id)
         for elemento in categorias:
             categoria = Categoria(elemento)
-            nota.categorias.append(categoria)
+            nota.categorias.add(categoria)
 
     @staticmethod
     def get_categorias(nota_id: int):
@@ -333,7 +333,7 @@ class NotaServices:
         temas = NotaServices.get_temas_de_nota(nota.id)
         for elemento in temas:
             tema = Tema(elemento)
-            nota.temas.append(tema)
+            nota.temas.add(tema)
 
     @staticmethod
     def get_autores_en_una_linea(nota: Nota):

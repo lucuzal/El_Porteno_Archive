@@ -86,6 +86,14 @@ class ListaMulti(Gtk.Box):
         self.pack_start(self.bt_cargar, False, False, 0)
         self.pack_start(scroll_2, True, True, 0)
 
+    def set_editable(self, editable: bool = True):
+        if editable:
+            self.search.set_editable(True)
+            self.bt_cargar.set_sensitive(True)
+        else:
+            self.search.set_editable(False)
+            self.bt_cargar.set_sensitive(False)
+
 
 
 class LabelNota(Gtk.Box):
@@ -219,6 +227,12 @@ class EntradaComentarios:
         star_iter, end_iter = buffer.get_bounds()
         text = buffer.get_text(star_iter, end_iter, True)
         return text
+    
+    def set_editable(self, editable: bool):
+        if editable:
+            self.tv.set_editable(False)
+        else:
+            self.tv.set_editable(True)
 
 class VisualizadorNotas(Gtk.Box):
 
