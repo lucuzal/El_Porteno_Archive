@@ -5,7 +5,7 @@ import datetime
 import config
 
 from gi.repository import Gtk, Gdk, GLib, GObject, Pango, GdkPixbuf
-from models import Nota, Tema, Categoria, ArchivoResumen, Carta
+from models import Nota, Tema, Categoria, ArchivoResumen, Carta, Autor, Tema
 from services import NotaServices, ServicesArchivoResumen, CartaServices, AnalisisService
 import utils
 import logging
@@ -61,7 +61,7 @@ class ListaMulti(Gtk.Box):
 
         box_1 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
 
-        self._lista = []
+        self._lista = set()
 
         #widgets
         self.search = Gtk.SearchEntry()
@@ -74,6 +74,21 @@ class ListaMulti(Gtk.Box):
         scroll_2 = Gtk.ScrolledWindow()
         scroll_2.add(self.lista_seleccionada)
         scroll_2.set_vexpand(True)
+        ls = Gtk.ListStore(int, str)
+        ls.append([0,""])
+        self.lista_seleccionada.set_model(ls)
+        renderer = Gtk.CellRendererText()
+        column = Gtk.TreeViewColumn("id", renderer, text=0)
+        column.set_resizable(False)
+        column.set_visible(False)
+        self.lista_seleccionada.append_column(column)
+        column = Gtk.TreeViewColumn("Nombre", renderer, text=1)
+        column.set_resizable(False)
+        column.set_visible(True)
+        self.lista_seleccionada.append_column(column)
+        self.lista_seleccionada.set_headers_visible(False)
+        self.lista_seleccionada.set_enable_search(False)
+        
 
         self.bt_cargar = Gtk.Button(label="-->")
 
@@ -93,6 +108,20 @@ class ListaMulti(Gtk.Box):
         else:
             self.search.set_editable(False)
             self.bt_cargar.set_sensitive(False)
+
+    def set_elementos_seleccionados(self, ingresado: set[Autor | Tema]):
+        self._lista = list(ingresado)
+        ls: Gtk.ListStore = self.lista_seleccionada.get_model()
+        ls.clear()
+        
+        if self._lista:
+            for e in self._lista:
+                if type(e) == Autor:
+                    ls.append([e.id, utils.get_nombre_completo(e)])
+                else:
+                    ls.append([e.id, e.tema])
+        else:
+            ls.append([0,""])
 
 
 
