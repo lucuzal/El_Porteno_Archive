@@ -34,22 +34,22 @@ class Hexagrama:
 class Nota:
 
     def __init__(self, nota: dict):
-        self.id = nota['id']
-        self.revista = nota['revista_id']
-        self.titulo = nota['titulo']
-        self.paginas = nota['paginas']
-        self.dossier = nota['dossier']
-        self.seccion = nota['seccion']
-        self.tipo = nota['tipo']
-        self.original = nota['original']
-        self.relacionado = nota['relevante']
-        self.relacionado_sexualidad = nota['relevante_sexualidad']
-        self.relacionado_memoria = nota['relevante_testimonio']
-        self.comentarios = nota['comentarios']
-        self.autores = set()
-        self.temas = set()
-        self.categorias = set()
-        self.analisis = set()
+        self.id: int = nota['id']
+        self.revista: int = nota['revista_id']
+        self.titulo: str = nota['titulo']
+        self.paginas: str = nota['paginas']
+        self.dossier: str = nota['dossier']
+        self.seccion: str = nota['seccion']
+        self.tipo: str = nota['tipo']
+        self.original: bool = nota['original']
+        self.relacionado: bool = nota['relevante']
+        self.relacionado_sexualidad: bool = nota['relevante_sexualidad']
+        self.relacionado_memoria: bool = nota['relevante_testimonio']
+        self.comentarios: str = nota['comentarios']
+        self.autores: set = set()
+        self.temas: set = set()
+        self.categorias: set = set()
+        self.analisis: set = set()
 
 
 class Revista:

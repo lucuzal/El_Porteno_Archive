@@ -4,6 +4,7 @@ from traceback import print_exception
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from ui.widgets import LabelNota, EntradaComentarios, ListaMulti
 from application_state import EstadoDeAplicacion
+from models import Nota
 import logging
 
 class DialogNotas(Gtk.Window):
@@ -71,6 +72,15 @@ class DialogNotas(Gtk.Window):
         self.txt_comentario = EntradaComentarios()
         self.txt_comentario.scroll.set_vexpand(True)
 
+        #checks buttons
+        self.chb_relacionado = Gtk.CheckButton(label="¿es relevante?")
+        self.chb_relacionado_memoria = Gtk.CheckButton(label="con memoria")
+        self.chb_relacionado_sexualidad = Gtk.CheckButton(label="con sexualidad")
+        box_relevante = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        box_relevante.pack_start(self.chb_relacionado, True, True, 0)
+        box_relevante.pack_start(self.chb_relacionado_memoria, True, True, 0)
+        box_relevante.pack_start(self.chb_relacionado_sexualidad, True, True, 0)
+
         #Autores y temas
         self.lista_autores = ListaMulti()
         self.lista_temas = ListaMulti()
@@ -94,13 +104,14 @@ class DialogNotas(Gtk.Window):
         grid.attach(lb_paginas, 3,3,1,1)
         grid.attach(self.ent_paginas, 4,3,1,1)
         grid.attach(self.bt_descartar, 0,4,1,1)
-        grid.attach(lb_autores, 1,4,1,1)
-        grid.attach(self.lista_autores, 2,4,3,3)
-        grid.attach(lb_temas, 1,7,1,1)
-        grid.attach(self.lista_temas, 2,7,3,3)
+        grid.attach(box_relevante, 2,4,3,1)
+        grid.attach(lb_autores, 1,5,1,1)
+        grid.attach(self.lista_autores, 2,5,3,3)
+        grid.attach(lb_temas, 1,8,1,1)
+        grid.attach(self.lista_temas, 2,8,3,3)
         grid.attach(self.bt_salir, 0,5,1,1)
-        grid.attach(lb_comentarios,1,10,1,1)
-        grid.attach(self.txt_comentario.empaquetar(), 1,11,4,4)
+        grid.attach(lb_comentarios,1,11,1,1)
+        grid.attach(self.txt_comentario.empaquetar(), 1,12,4,4)
 
 
 
@@ -108,8 +119,13 @@ class DialogNotas(Gtk.Window):
         pass
 
     def _iniciar(self):
-         if self.app_state.nota_seleccionada:
+        if self.app_state.nota_seleccionada:
+            self.cargar_nota_en_widgets(self.app_state.nota_seleccionada)
             self.habilitar_edicion(False)
+        else:
+            pass
+
+
 
 
     def habilitar_edicion(self, editable: bool):
@@ -127,6 +143,9 @@ class DialogNotas(Gtk.Window):
             self.ent_dossier.set_editable(True)
             self.ent_tipo.set_editable(True)
             self.ent_paginas.set_editable(True)
+            self.chb_relacionado.set_sensitive(True)
+            self.chb_relacionado_memoria.set_sensitive(True)
+            self.chb_relacionado_sexualidad.set_sensitive(True)
             self.lista_autores.set_editable(True)
             self.txt_comentario.set_editable(True)
         else:
@@ -143,6 +162,9 @@ class DialogNotas(Gtk.Window):
             self.ent_dossier.set_editable(False)
             self.ent_tipo.set_editable(False)
             self.ent_paginas.set_editable(False)
+            self.chb_relacionado.set_sensitive(False)
+            self.chb_relacionado_memoria.set_sensitive(False)
+            self.chb_relacionado_sexualidad.set_sensitive(False)
             self.lista_autores.set_editable(False)
             self.txt_comentario.set_editable(False)
         self.configurar_headers()
@@ -173,3 +195,16 @@ class DialogNotas(Gtk.Window):
             if self.app_state.nota_seleccionada.id == self.app_state.revista_seleccionada.notas[0].id:
                 return True
         return False
+
+    def cargar_nota_en_widgets (self, nota: Nota):
+        self.ent_titulo.set_text(nota.titulo)
+        self.ent_seccion.set_text(nota.seccion)
+        self.ent_dossier.set_text(nota.dossier)
+        self.ent_tipo.set_text(nota.tipo)
+        self.ent_paginas.set_text(nota.paginas)
+        self.chb_relacionado.set_active(nota.relacionado)
+        self.chb_relacionado_memoria.set_active(nota.relacionado_memoria)
+        self.chb_relacionado_sexualidad.set_active(nota.relacionado_sexualidad)
+        self.lista_autores.set_elementos_seleccionados(nota.autores)
+        self.lista_temas.set_elementos_seleccionados(nota.temas)
+        self.txt_comentario.set_text(nota.comentarios)
