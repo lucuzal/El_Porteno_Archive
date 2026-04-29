@@ -4,31 +4,31 @@ import datetime
 class Autor:
 
     def __init__(self, autor: dict):
-        self.id = autor['id']
-        self.nombre = autor['nombre']
-        self.apellido = autor['apellido']
-        self.genero = autor['genero']
-        self.comentarios = autor['comentarios']
+        self.id: int = autor['id']
+        self.nombre: str = autor['nombre']
+        self.apellido: str = autor['apellido']
+        self.genero: str = autor['genero']
+        self.comentarios: str = autor['comentarios']
 
 
 class Carta:
 
     def __init__(self, carta: dict):
-        self.id = carta['id']
-        self.revista = carta['revista_id']
-        self.remitente = carta['remitente']
-        self.tema = carta['tema']
-        self.relevante = carta['relevante']
-        self.categoria_analisis = []
-        self.archivo_resumen = []
+        self.id: int = carta['id']
+        self.revista: int = carta['revista_id']
+        self.remitente: str = carta['remitente']
+        self.tema: str = carta['tema']
+        self.relevante: bool = carta['relevante']
+        self.categoria_analisis: set = set()
+        self.archivo_resumen: set = set()
 
 
 class Hexagrama:
 
     def __init__(self, numero: int):
-        self.numero = numero
-        self.lineas = None
-        self.codigo_binario = None
+        self.numero: int = numero
+        self.lineas: str = None
+        self.codigo_binario: str = None
 
 
 class Nota:
@@ -55,20 +55,20 @@ class Nota:
 class Revista:
 
     def __init__(self, numero: dict):
-        self.id = numero['id']
+        self.id: int = numero['id']
         ano, mes, dia = map(int, str(numero['fecha']).split("-"))
-        self.fecha = datetime.datetime(ano, mes, dia)
-        self.tapa = numero['tapa']
-        self.nota_tapa = numero['nota_de_tapa']
-        self.hexagrama = Hexagrama(numero['hexagrama'])
-        self.paginas_faltantes = numero['paginas_faltantes']
-        self.formato = numero['formato_en_archivo']
-        self.comentarios = numero['comentarios']
-        self.precio = numero['precio_nominal'] if numero['precio_nominal'] else ""
+        self.fecha: datetime.datetime = datetime.datetime(ano, mes, dia)
+        self.tapa: str = numero['tapa']
+        self.nota_tapa: str = numero['nota_de_tapa']
+        self.hexagrama: int = Hexagrama(numero['hexagrama'])
+        self.paginas_faltantes: str = numero['paginas_faltantes']
+        self.formato: str = numero['formato_en_archivo']
+        self.comentarios: str = numero['comentarios']
+        self.precio: str = numero['precio_nominal'] if numero['precio_nominal'] else ""
         self.staff: list[StaffMiembro] = []
         self.notas: list[Nota] = []
         self.correo: list[Carta] = []
-        self.estado = None
+        self.estado:str = None
 
     def buscar_nota_por_id(self, id: int):
         for n in self.notas:
@@ -79,28 +79,28 @@ class Revista:
 class StaffMiembro:
 
     def __init__(self, staff_miembro):
-        self.posicion = staff_miembro["posicion"]
-        self.nombre = staff_miembro["nombre"]
-        self.apellido = staff_miembro["apellido"]
-        self.genero = staff_miembro["genero"]
+        self.posicion: str = staff_miembro["posicion"]
+        self.nombre: str = staff_miembro["nombre"]
+        self.apellido: str = staff_miembro["apellido"]
+        self.genero:str = staff_miembro["genero"]
 
 
 class Tema:
 
     def __init__(self, tema: dict):
-        self.id = tema['id']
-        self.tema = tema['tema']
+        self.id: int = tema['id']
+        self.tema: str = tema['tema']
 
 class Categoria:
 
     def __init__(self, categoria: dict):
-        self.id = categoria['id']
-        self.categoria = categoria['grupo']
+        self.id: int = categoria['id']
+        self.categoria: str = categoria['grupo']
 
 class ArchivoResumen:
 
     def __init__(self, analisis: dict):
-        self.id = analisis['id']
-        self.parent_id = analisis.get("nota_id") or analisis.get("carta_id")
-        self.titulo = analisis['titulo']
-        self.cuerpo_texto = analisis['cuerpo_texto']
+        self.id:int = analisis['id']
+        self.parent_id: int = analisis.get("nota_id") or analisis.get("carta_id")
+        self.titulo: str = analisis['titulo']
+        self.cuerpo_texto: str = analisis['cuerpo_texto']
