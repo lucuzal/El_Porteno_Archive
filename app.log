@@ -7966,3 +7966,95 @@ AttributeError: 'Tema' object has no attribute 'nombre'
 2026-04-28 00:07:23,758 - __main__ - INFO - 72 - Ventana principal mostrada - Se inicia Main loop
 2026-04-28 00:07:40,313 - database.connection - INFO - 37 - Conexión cerrada
 2026-04-28 00:07:40,314 - __main__ - INFO - 77 - === Aplicación finalizada correctamente ===
+2026-04-29 13:27:28,130 - __main__ - INFO - 56 - === Iniciando la aplicación ===
+2026-04-29 13:27:28,131 - __main__ - INFO - 28 - Iniciando configuración de la aplicación El Porteño - Index
+- Versión: 3.0.0
+2026-04-29 13:27:28,215 - database.connection - INFO - 26 - Conexión establecida
+2026-04-29 13:27:28,215 - __main__ - INFO - 64 - Creando ventana principal
+2026-04-29 13:27:28,215 - ui.main_window - INFO - 35 - Creando widgets en MainWindow
+2026-04-29 13:27:28,216 - ui.main_window - INFO - 63 - --- CREANDO PÁGINA REVISTAS ---
+2026-04-29 13:27:28,267 - ui.main_window - INFO - 230 - --- FINALIZADA PÁGINA REVISTAS ---
+2026-04-29 13:27:28,267 - ui.main_window - INFO - 236 - --- CREANDO PÁGINA AUTORES ---
+2026-04-29 13:27:28,275 - ui.main_window - INFO - 358 - --- FINALIZADA PÁGINA AUTORES ---
+2026-04-29 13:27:28,275 - ui.main_window - INFO - 363 - --- CREANDO PÁGINA TEMAS ---
+2026-04-29 13:27:28,283 - ui.main_window - INFO - 424 - --- FINALIZADA PÁGINA TEMAS ---
+2026-04-29 13:27:28,283 - ui.main_window - INFO - 429 - --- CREANDO PÁGINA ANALISIS ---
+2026-04-29 13:27:28,293 - ui.main_window - INFO - 493 - --- FINALIZADA PÁGINA ANALISIS ---
+2026-04-29 13:27:28,293 - ui.main_window - INFO - 495 - --- INICIO PROCEDIMIENTOS INCIALES ---
+2026-04-29 13:27:28,293 - ui.main_window - INFO - 497 - --- FIN DE MAIN WINDOW ---
+2026-04-29 13:27:28,308 - services - ERROR - 85 - Falló la ejecución sql QUERY GET REVISTA POR ID: Revista.__init__() missing 7 required positional arguments: 'fecha', 'tapa', 'nota_tapa', 'hexagrama', 'paginas_faltantes', 'formato', and 'comentarios'
+2026-04-29 13:27:28,308 - __main__ - CRITICAL - 81 - Error crítico al iniciar aplicación: 'NoneType' object has no attribute 'id'
+2026-04-29 13:38:00,050 - __main__ - INFO - 56 - === Iniciando la aplicación ===
+2026-04-29 13:38:00,050 - __main__ - INFO - 28 - Iniciando configuración de la aplicación El Porteño - Index
+- Versión: 3.0.0
+2026-04-29 13:38:00,108 - database.connection - INFO - 26 - Conexión establecida
+2026-04-29 13:38:00,108 - __main__ - INFO - 64 - Creando ventana principal
+2026-04-29 13:38:00,109 - ui.main_window - INFO - 35 - Creando widgets en MainWindow
+2026-04-29 13:38:00,110 - ui.main_window - INFO - 63 - --- CREANDO PÁGINA REVISTAS ---
+2026-04-29 13:38:00,141 - ui.main_window - INFO - 230 - --- FINALIZADA PÁGINA REVISTAS ---
+2026-04-29 13:38:00,142 - ui.main_window - INFO - 236 - --- CREANDO PÁGINA AUTORES ---
+2026-04-29 13:38:00,147 - ui.main_window - INFO - 358 - --- FINALIZADA PÁGINA AUTORES ---
+2026-04-29 13:38:00,147 - ui.main_window - INFO - 363 - --- CREANDO PÁGINA TEMAS ---
+2026-04-29 13:38:00,154 - ui.main_window - INFO - 424 - --- FINALIZADA PÁGINA TEMAS ---
+2026-04-29 13:38:00,154 - ui.main_window - INFO - 429 - --- CREANDO PÁGINA ANALISIS ---
+2026-04-29 13:38:00,160 - ui.main_window - INFO - 493 - --- FINALIZADA PÁGINA ANALISIS ---
+2026-04-29 13:38:00,160 - ui.main_window - INFO - 495 - --- INICIO PROCEDIMIENTOS INCIALES ---
+2026-04-29 13:38:00,160 - ui.main_window - INFO - 497 - --- FIN DE MAIN WINDOW ---
+2026-04-29 13:38:00,163 - services - ERROR - 85 - Falló la ejecución sql QUERY GET REVISTA POR ID: type object 'datetime.datetime' has no attribute 'datetime'
+2026-04-29 13:38:00,163 - __main__ - CRITICAL - 81 - Error crítico al iniciar aplicación: 'NoneType' object has no attribute 'id'
+2026-04-29 13:38:55,235 - __main__ - INFO - 56 - === Iniciando la aplicación ===
+2026-04-29 13:38:55,236 - __main__ - INFO - 28 - Iniciando configuración de la aplicación El Porteño - Index
+- Versión: 3.0.0
+2026-04-29 13:38:55,365 - database.connection - INFO - 26 - Conexión establecida
+2026-04-29 13:38:55,365 - __main__ - INFO - 64 - Creando ventana principal
+2026-04-29 13:38:55,366 - ui.main_window - INFO - 35 - Creando widgets en MainWindow
+2026-04-29 13:38:55,368 - ui.main_window - INFO - 63 - --- CREANDO PÁGINA REVISTAS ---
+2026-04-29 13:38:55,404 - ui.main_window - INFO - 230 - --- FINALIZADA PÁGINA REVISTAS ---
+2026-04-29 13:38:55,405 - ui.main_window - INFO - 236 - --- CREANDO PÁGINA AUTORES ---
+2026-04-29 13:38:55,412 - ui.main_window - INFO - 358 - --- FINALIZADA PÁGINA AUTORES ---
+2026-04-29 13:38:55,413 - ui.main_window - INFO - 363 - --- CREANDO PÁGINA TEMAS ---
+2026-04-29 13:38:55,422 - ui.main_window - INFO - 424 - --- FINALIZADA PÁGINA TEMAS ---
+2026-04-29 13:38:55,422 - ui.main_window - INFO - 429 - --- CREANDO PÁGINA ANALISIS ---
+2026-04-29 13:38:55,431 - ui.main_window - INFO - 493 - --- FINALIZADA PÁGINA ANALISIS ---
+2026-04-29 13:38:55,431 - ui.main_window - INFO - 495 - --- INICIO PROCEDIMIENTOS INCIALES ---
+2026-04-29 13:38:55,431 - ui.main_window - INFO - 497 - --- FIN DE MAIN WINDOW ---
+2026-04-29 13:38:55,436 - services - ERROR - 85 - Falló la ejecución sql QUERY GET REVISTA POR ID: type object 'datetime.datetime' has no attribute 'datetime'
+2026-04-29 13:38:55,436 - __main__ - CRITICAL - 81 - Error crítico al iniciar aplicación: 'NoneType' object has no attribute 'id'
+2026-04-29 13:40:06,443 - __main__ - INFO - 56 - === Iniciando la aplicación ===
+2026-04-29 13:40:06,444 - __main__ - INFO - 28 - Iniciando configuración de la aplicación El Porteño - Index
+- Versión: 3.0.0
+2026-04-29 13:40:06,534 - database.connection - INFO - 26 - Conexión establecida
+2026-04-29 13:40:06,534 - __main__ - INFO - 64 - Creando ventana principal
+2026-04-29 13:40:06,536 - ui.main_window - INFO - 35 - Creando widgets en MainWindow
+2026-04-29 13:40:06,538 - ui.main_window - INFO - 63 - --- CREANDO PÁGINA REVISTAS ---
+2026-04-29 13:40:06,568 - ui.main_window - INFO - 230 - --- FINALIZADA PÁGINA REVISTAS ---
+2026-04-29 13:40:06,568 - ui.main_window - INFO - 236 - --- CREANDO PÁGINA AUTORES ---
+2026-04-29 13:40:06,577 - ui.main_window - INFO - 358 - --- FINALIZADA PÁGINA AUTORES ---
+2026-04-29 13:40:06,577 - ui.main_window - INFO - 363 - --- CREANDO PÁGINA TEMAS ---
+2026-04-29 13:40:06,584 - ui.main_window - INFO - 424 - --- FINALIZADA PÁGINA TEMAS ---
+2026-04-29 13:40:06,584 - ui.main_window - INFO - 429 - --- CREANDO PÁGINA ANALISIS ---
+2026-04-29 13:40:06,591 - ui.main_window - INFO - 493 - --- FINALIZADA PÁGINA ANALISIS ---
+2026-04-29 13:40:06,592 - ui.main_window - INFO - 495 - --- INICIO PROCEDIMIENTOS INCIALES ---
+2026-04-29 13:40:06,592 - ui.main_window - INFO - 497 - --- FIN DE MAIN WINDOW ---
+2026-04-29 13:40:06,911 - __main__ - INFO - 72 - Ventana principal mostrada - Se inicia Main loop
+2026-04-29 13:40:10,738 - database.connection - INFO - 37 - Conexión cerrada
+2026-04-29 13:40:10,739 - __main__ - INFO - 77 - === Aplicación finalizada correctamente ===
+2026-04-29 13:40:17,888 - __main__ - INFO - 56 - === Iniciando la aplicación ===
+2026-04-29 13:40:17,888 - __main__ - INFO - 28 - Iniciando configuración de la aplicación El Porteño - Index
+- Versión: 3.0.0
+2026-04-29 13:40:17,948 - database.connection - INFO - 26 - Conexión establecida
+2026-04-29 13:40:17,948 - __main__ - INFO - 64 - Creando ventana principal
+2026-04-29 13:40:17,949 - ui.main_window - INFO - 35 - Creando widgets en MainWindow
+2026-04-29 13:40:17,949 - ui.main_window - INFO - 63 - --- CREANDO PÁGINA REVISTAS ---
+2026-04-29 13:40:17,976 - ui.main_window - INFO - 230 - --- FINALIZADA PÁGINA REVISTAS ---
+2026-04-29 13:40:17,977 - ui.main_window - INFO - 236 - --- CREANDO PÁGINA AUTORES ---
+2026-04-29 13:40:17,983 - ui.main_window - INFO - 358 - --- FINALIZADA PÁGINA AUTORES ---
+2026-04-29 13:40:17,984 - ui.main_window - INFO - 363 - --- CREANDO PÁGINA TEMAS ---
+2026-04-29 13:40:17,989 - ui.main_window - INFO - 424 - --- FINALIZADA PÁGINA TEMAS ---
+2026-04-29 13:40:17,989 - ui.main_window - INFO - 429 - --- CREANDO PÁGINA ANALISIS ---
+2026-04-29 13:40:17,996 - ui.main_window - INFO - 493 - --- FINALIZADA PÁGINA ANALISIS ---
+2026-04-29 13:40:17,996 - ui.main_window - INFO - 495 - --- INICIO PROCEDIMIENTOS INCIALES ---
+2026-04-29 13:40:17,996 - ui.main_window - INFO - 497 - --- FIN DE MAIN WINDOW ---
+2026-04-29 13:40:18,276 - __main__ - INFO - 72 - Ventana principal mostrada - Se inicia Main loop
+2026-04-29 13:40:28,046 - database.connection - INFO - 37 - Conexión cerrada
+2026-04-29 13:40:28,047 - __main__ - INFO - 77 - === Aplicación finalizada correctamente ===

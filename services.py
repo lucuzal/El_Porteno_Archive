@@ -84,7 +84,7 @@ class RevistaServices:
         revista = None
         try:
             vs = DataBaseConnection.execute_query(QUERY_GET_REVISTA_POR_ID, params= (id,))
-            revista = Revista(vs)
+            revista = Revista.desde_dict(vs)
             return revista
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY GET REVISTA POR ID: {e}")
@@ -93,14 +93,14 @@ class RevistaServices:
     def cargar_staff_completo(revista: Revista):
         staff_completo = StaffServices.get_staff(revista.id)
         for elemento in staff_completo:
-            integrante = StaffMiembro(elemento)
+            integrante = StaffMiembro.desde_dict(elemento)
             revista.staff.append(integrante)
 
     @staticmethod
     def cargar_notas(revista: Revista):
         notas = NotaServices.get_notas(revista.id)
         for elemento in notas:
-            nota = Nota(elemento)
+            nota = Nota.desde_dict(elemento)
             #NotaServices.completar_extras(nota)
             revista.notas.append(nota)
         RevistaServices.completar_extras_full_revista(revista)
@@ -193,7 +193,7 @@ class RevistaServices:
     def cargar_correo(revista: Revista):
         correo = CartaServices.get_cartas(revista.id)
         for elemento in correo:
-            carta = Carta(elemento)
+            carta = Carta.desde_dict(elemento)
             #CartaServices.cargar_archivo_resumen(carta)
             #CartaServices.cargar_grupo_analisis(carta)
             revista.correo.append(carta)
@@ -284,14 +284,14 @@ class NotaServices:
     def cargar_autores(nota: Nota):
         autores = NotaServices.get_autor_de_nota(nota.id)
         for elemento in autores:
-            autor = Autor(elemento)
+            autor = Autor.desde_dic(elemento)
             nota.autores.add(autor)
 
     @staticmethod
     def cargar_categorias(nota: Nota):
         categorias = NotaServices.get_categorias(nota.id)
         for elemento in categorias:
-            categoria = Categoria(elemento)
+            categoria = Categoria.desde_dict(elemento)
             nota.categorias.add(categoria)
 
     @staticmethod
@@ -307,7 +307,7 @@ class NotaServices:
     def cargar_archivo_resumen(nota: Nota):
         archivos = NotaServices.get_archivo_resumen(nota.id)
         for elemento in archivos:
-            archivo = ArchivoResumen(elemento)
+            archivo = ArchivoResumen.desde_dict(elemento)
             nota.analisis.append(archivo)
 
     @staticmethod
@@ -332,7 +332,7 @@ class NotaServices:
     def cargar_temas(nota: Nota):
         temas = NotaServices.get_temas_de_nota(nota.id)
         for elemento in temas:
-            tema = Tema(elemento)
+            tema = Tema.desde_dict(elemento)
             nota.temas.add(tema)
 
     @staticmethod
@@ -374,7 +374,7 @@ class CartaServices:
         try:
             tabla = DataBaseConnection.execute_query(QUERY_GET_GRUPOS_ANALISIS_PARA_CARTA, params=(carta_id,), select_multiple_results=True)
             for elemento in tabla:
-                carga = Categoria(elemento)
+                carga = Categoria.desde_dict(elemento)
                 categorias.append(carga)
 
             return categorias
@@ -388,7 +388,7 @@ class CartaServices:
             tabla = DataBaseConnection.execute_query(QUERY_GET_ARCHIVO_RESUMEN_CARTA_POR_ID_CARTA, params=(carta_id,), select_multiple_results=True)
             if tabla:
                 for reg in tabla:
-                    carga = ArchivoResumen(reg)
+                    carga = ArchivoResumen.desde_dict(reg)
                     archivo_resumen.append(carga)
             return archivo_resumen
         except Exception as e:
@@ -558,7 +558,7 @@ class AnalisisService:
         try:
             grupos = DataBaseConnection.execute_query(QUERY_GET_GRUPOS_ANALISIS, select_multiple_results=True)
             for elemento in grupos:
-                carga = Categoria(elemento)
+                carga = Categoria.desde_dict(elemento)
                 categorias.append(carga)
             return categorias
 
@@ -669,13 +669,13 @@ class ServicesArchivoResumen:
     @staticmethod
     def get_archivo_resumen_listo(analisis_id):
         diccionario = ServicesArchivoResumen.get_archivo_resumen_por_id(analisis_id)
-        archivo = ArchivoResumen(diccionario)
+        archivo = ArchivoResumen.desde_dict(diccionario)
         return archivo
 
     @staticmethod
     def get_archivo_resumen_carta_listo(analisis_id):
         diccionario = ServicesArchivoResumen.get_archivo_resumen_carta_por_id(analisis_id)
-        archivo = ArchivoResumen(diccionario)
+        archivo = ArchivoResumen.desde_dict(diccionario)
         return archivo
 
 

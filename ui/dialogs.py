@@ -372,7 +372,7 @@ class DialogCorreo(Gtk.Window):
             return
 
         valor = model[row] if row != -1 else None
-        grupo_analisis = Categoria({'id': valor[0], 'grupo': valor[1]})
+        grupo_analisis = Categoria.desde_dict({'id': valor[0], 'grupo': valor[1]})
 
         if grupo_analisis in self.app_state.carta_seleccionada.categoria_analisis:
             msg = MsgBoxInfo("La carta ya está ingresada al grupo análisis")

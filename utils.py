@@ -65,7 +65,7 @@ def to_nota(lista_notas: list[dict]):
     notas = []
     if lista_notas:
         for elemento in lista_notas:
-            carga = Nota(elemento)
+            carga = Nota.desde_dict(elemento)
             NotaServices.completar_extras(carga)
             notas.append(carga)
     return notas
@@ -73,14 +73,14 @@ def to_nota(lista_notas: list[dict]):
 def to_tema(lista_temas: list[dict]):
     temas = []
     for elemento in lista_temas:
-        carga = Tema(elemento)
+        carga = Tema.desde_dict(elemento)
         temas.append(carga)
     return temas
 
 def to_cartas(lista_cartas: list[dict]):
     cartas = []
     for elemento in lista_cartas:
-        carga = Carta(elemento)
+        carga = Carta.desde_dict(elemento)
         CartaServices.cargar_archivo_resumen(carga)
         cartas.append(carga)
     return cartas

@@ -714,7 +714,7 @@ class MainWindow(Gtk.Window):
         if not nota_dict:
             MsgBoxInfo(f"El id {id_nota} no corresponde a una nota existente")
             return
-        nota = Nota(nota_dict)
+        nota = Nota.desde_dict(nota_dict)
         if nota.revista != self.app_state.revista_seleccionada.id:
             self.actualizar_revista(nota.revista)
         self.vn_revista.seleccionar_nota_segun_id(id_nota)
@@ -726,7 +726,7 @@ class MainWindow(Gtk.Window):
             titulo_ventana = archivo_resumen.titulo
         else:
             titulo_ventana = "Editor de resúmenes y análisis"
-            archivo_resumen = ArchivoResumen({"id":0, "nota_id": nota_id, "titulo": "", "cuerpo_texto": ""})
+            archivo_resumen = ArchivoResumen.desde_dict({"id":0, "nota_id": nota_id, "titulo": "", "cuerpo_texto": ""})
 
 
         window = Gtk.Window(title=titulo_ventana)
@@ -780,7 +780,7 @@ class MainWindow(Gtk.Window):
 
         if autores:
             for elemento in autores:
-                autor = Autor(elemento)
+                autor = Autor.desde_dic(elemento)
                 ls.append([autor.id, utils.get_nombre_completo(autor)])
         else:
             ls.append([0, "No hay resultados"])
@@ -1074,7 +1074,7 @@ class MainWindow(Gtk.Window):
         if not i:
             return
         id_autor = model.get_value(i, 0)
-        autor = Autor(AutorServices.get_autor_por_id_autor(id_autor))
+        autor = Autor.desde_dic(AutorServices.get_autor_por_id_autor(id_autor))
         self.actualizar_autor(autor)
 
     def vn_autor_row_activate(self, widget,path, column):
@@ -1131,7 +1131,7 @@ class MainWindow(Gtk.Window):
         i = model.get_iter(path)
         if not i:
             return
-        tema = Tema({'id': model.get_value(i, 0), 'tema': model.get_value(i,1)})
+        tema = Tema.desde_dict({'id': model.get_value(i, 0), 'tema': model.get_value(i,1)})
 
         self.fb_temas_seleccionados.agregar_tag(tema)
         self.cargar_notas_en_visor_nota_temas()
@@ -1215,7 +1215,7 @@ class MainWindow(Gtk.Window):
         nota = NotaServices.get_nota_por_id_nota(nota_id)
 
         if nota:
-            nota = Nota(nota)
+            nota = Nota.desde_dict(nota)
             self.app_state.nota_a_cargar_en_grupo_analisis = nota
             self.ent_id_analisis.set_text("")
             self.set_widgets_analisis_como_editables(True)

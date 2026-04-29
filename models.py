@@ -1,106 +1,240 @@
-from dataclasses import dataclass
-import datetime
+from datetime import date
 
 class Autor:
 
-    def __init__(self, autor: dict):
-        self.id: int = autor['id']
-        self.nombre: str = autor['nombre']
-        self.apellido: str = autor['apellido']
-        self.genero: str = autor['genero']
-        self.comentarios: str = autor['comentarios']
+    def __init__(self, id: int, nombre: str, apellido: str, genero: str, comentarios: str):
+        self.id: int = id
+        self.nombre: str = nombre
+        self.apellido: str = apellido
+        self.genero: str = genero
+        self.comentarios: str = comentarios
+        
+    @classmethod
+    def desde_dic(cls, autor: dict):
+        return cls(id = autor['id'],
+                    nombre = autor['nombre'],
+                    apellido = autor['apellido'],
+                    genero = autor['genero'],
+                    comentarios = autor['comentarios'])
+
+
+    @classmethod
+    def desde_sql(cls, fila: tuple):
+        return cls(id = fila[0],
+                   nombre = fila[1],
+                   apellido = fila[2],
+                   genero = fila[3],
+                   comentarios = fila[4])
 
 
 class Carta:
 
-    def __init__(self, carta: dict):
-        self.id: int = carta['id']
-        self.revista: int = carta['revista_id']
-        self.remitente: str = carta['remitente']
-        self.tema: str = carta['tema']
-        self.relevante: bool = carta['relevante']
-        self.categoria_analisis: set = set()
-        self.archivo_resumen: set = set()
+    def __init__(self, id:int, revista_id:int, remitente:str, tema:str, relevante:bool, categoria_analisis: set = None, archivo_resumen: set = None):
+        self.id: int = id
+        self.revista: int = revista_id
+        self.remitente: str = remitente
+        self.tema: str = tema
+        self.relevante: bool = relevante
+        self.categoria_analisis: set[Categoria] = categoria_analisis if categoria_analisis is not None else set()
+        self.archivo_resumen: set[ArchivoResumen] = archivo_resumen if archivo_resumen is not None else set()
+
+    @classmethod
+    def desde_dict(cls, carta:dict):
+        return cls(id = carta['id'],
+                   revista_id = carta['revista_id'], 
+                   remitente = carta['remitente'], 
+                   tema = carta['tema'], 
+                   relevante = carta['relevante'])
+    
+    @classmethod
+    def desde_sql(cls, fila:tuple):
+        return cls(id = fila[0],
+                   revista_id = fila[1], 
+                   remitente = fila[2], 
+                   tema = fila[3], 
+                   relevante = fila[4])
 
 
 class Hexagrama:
 
-    def __init__(self, numero: int):
+    def __init__(self, numero: int, lineas: str = None, codigo_binario: str = None):
         self.numero: int = numero
-        self.lineas: str = None
-        self.codigo_binario: str = None
+        self.lineas: str = lineas
+        self.codigo_binario: str = codigo_binario
 
 
 class Nota:
 
-    def __init__(self, nota: dict):
-        self.id: int = nota['id']
-        self.revista: int = nota['revista_id']
-        self.titulo: str = nota['titulo']
-        self.paginas: str = nota['paginas']
-        self.dossier: str = nota['dossier']
-        self.seccion: str = nota['seccion']
-        self.tipo: str = nota['tipo']
-        self.original: bool = nota['original']
-        self.relacionado: bool = nota['relevante']
-        self.relacionado_sexualidad: bool = nota['relevante_sexualidad']
-        self.relacionado_memoria: bool = nota['relevante_testimonio']
-        self.comentarios: str = nota['comentarios']
-        self.autores: set = set()
-        self.temas: set = set()
-        self.categorias: set = set()
-        self.analisis: set = set()
+    def __init__(self, id: int, revista_id: int, titulo: str, paginas: str, dossier:str, seccion:str, tipo:str,
+                 original: bool, relacionado: bool, relacionado_sexualidad: bool, relacionado_memoria: bool, comentarios: str,
+                 autores: set = None, temas: set = None, categorias: set = None, analisis: set = None):
+        self.id: int = id
+        self.revista: int = revista_id
+        self.titulo: str = titulo
+        self.paginas: str = paginas
+        self.dossier: str = dossier
+        self.seccion: str = seccion
+        self.tipo: str = tipo
+        self.original: bool = original
+        self.relacionado: bool = relacionado
+        self.relacionado_sexualidad: bool = relacionado_sexualidad
+        self.relacionado_memoria: bool = relacionado_memoria
+        self.comentarios: str = comentarios
+        self.autores: set[Autor] = autores if autores is not None else set()
+        self.temas: set[Tema] = temas if temas is not None else set()
+        self.categorias: set[Categoria] = categorias if categorias is not None else set()
+        self.analisis: set[ArchivoResumen] = analisis if analisis is not None else set()
+    
+    @classmethod
+    def desde_dict(cls, nota: dict):
+        return cls(id = nota['id'], 
+                   revista_id = nota['revista_id'], 
+                   titulo = nota['titulo'], 
+                   paginas = nota['paginas'], 
+                   dossier = nota['dossier'], 
+                   seccion = nota['seccion'], 
+                   tipo = nota['tipo'], 
+                   original = nota['original'], 
+                   relacionado = nota['relevante'], 
+                   relacionado_sexualidad = nota['relevante_sexualidad'], 
+                   relacionado_memoria = nota['relevante_testimonio'], 
+                   comentarios = nota['comentarios'])
+
+    @classmethod
+    def desde_sql(cls, fila: tuple):
+        return cls(id = fila[0], 
+                   revista_id = fila[1], 
+                   titulo = fila[2], 
+                   paginas = fila[3], 
+                   dossier = fila[4], 
+                   seccion = fila[5], 
+                   tipo = fila[6], 
+                   original = fila[7], 
+                   relacionado = fila[8], 
+                   relacionado_sexualidad = fila[9], 
+                   relacionado_memoria = fila[10], 
+                   comentarios = fila[11])
+
+
+class StaffMiembro:
+
+    def __init__(self, posicion: str, nombre: str, apellido: str, genero:str):
+        self.posicion: str = posicion
+        self.nombre: str = nombre
+        self.apellido: str = apellido
+        self.genero:str = genero
+    
+    @classmethod
+    def desde_dict(cls, staff_miembro: dict):
+        return cls(posicion = staff_miembro["posicion"], 
+                   nombre = staff_miembro["nombre"], 
+                   apellido = staff_miembro["apellido"], 
+                   genero = staff_miembro["genero"])
+
+    @classmethod
+    def desde_sql(cls, fila: tuple):
+        return cls(posicion = fila[0], 
+                   nombre = fila[1], 
+                   apellido = fila[2], 
+                   genero = fila[3])
 
 
 class Revista:
 
-    def __init__(self, numero: dict):
-        self.id: int = numero['id']
-        ano, mes, dia = map(int, str(numero['fecha']).split("-"))
-        self.fecha: datetime.datetime = datetime.datetime(ano, mes, dia)
-        self.tapa: str = numero['tapa']
-        self.nota_tapa: str = numero['nota_de_tapa']
-        self.hexagrama: int = Hexagrama(numero['hexagrama'])
-        self.paginas_faltantes: str = numero['paginas_faltantes']
-        self.formato: str = numero['formato_en_archivo']
-        self.comentarios: str = numero['comentarios']
-        self.precio: str = numero['precio_nominal'] if numero['precio_nominal'] else ""
-        self.staff: list[StaffMiembro] = []
-        self.notas: list[Nota] = []
-        self.correo: list[Carta] = []
-        self.estado:str = None
+    def __init__(self, id: int, fecha: str, tapa: int, nota_tapa: str, hexagrama: int, paginas_faltantes: str,
+                 formato: str, comentarios: str, precio: str = None, staff: list[StaffMiembro] = None, notas: list[Nota] = None,
+                 correo: list[Carta] = None, estado: str = None) :
+        self.id: int = id
+        ano, mes, dia = map(int, str(fecha).split("-"))
+        self.fecha: date = date(ano, mes, dia)
+        self.tapa: str = tapa
+        self.nota_tapa: str = nota_tapa
+        self.hexagrama: Hexagrama = Hexagrama(hexagrama)
+        self.paginas_faltantes: str = paginas_faltantes
+        self.formato: str = formato
+        self.comentarios: str = comentarios
+        self.precio: str = precio if precio else ""
+        self.staff: list[StaffMiembro] = staff if staff is not None else list()
+        self.notas: list[Nota] = notas if notas is not None else list()
+        self.correo: list[Carta] = correo if correo is not None else list()
+        self.estado:str = estado
 
-    def buscar_nota_por_id(self, id: int):
-        for n in self.notas:
-            if n.id == id:
-                return n
-        return None
+    @classmethod
+    def desde_dict(cls, numero: dict):
+        return cls(id = numero['id'], 
+                   fecha = numero['fecha'], 
+                   tapa = numero['tapa'], 
+                   nota_tapa = numero['nota_de_tapa'], 
+                   hexagrama = numero['hexagrama'],
+                   paginas_faltantes = numero['paginas_faltantes'],
+                   formato = numero['formato_en_archivo'],
+                   comentarios = numero['comentarios'],
+                   precio = numero['precio_nominal'])
 
-class StaffMiembro:
+    @classmethod
+    def desde_sql(cls, fila: tuple):
+        return cls(id = fila[0], 
+                   fecha = fila[1], 
+                   tapa = fila[2], 
+                   nota_tapa = fila[3], 
+                   hexagrama = fila[4],
+                   paginas_faltantes = fila[5],
+                   formato = fila[6],
+                   comentarios = fila[7],
+                   precio = fila[8])
 
-    def __init__(self, staff_miembro):
-        self.posicion: str = staff_miembro["posicion"]
-        self.nombre: str = staff_miembro["nombre"]
-        self.apellido: str = staff_miembro["apellido"]
-        self.genero:str = staff_miembro["genero"]
+    def buscar_nota_por_id(self, id: int) -> Nota | None:
+        return next((n for n in self.notas if n.id == id), None)
 
 
 class Tema:
 
-    def __init__(self, tema: dict):
-        self.id: int = tema['id']
-        self.tema: str = tema['tema']
+    def __init__(self, id: int, tema: str):
+        self.id: int = id
+        self.tema: str = tema
+
+    @classmethod
+    def desde_dict(cls, tema: dict):
+        return cls(id = tema['id'], tema = tema['tema'])
+
+    @classmethod
+    def desde_sql(cls, fila: tuple):
+        return cls(id = fila[0], tema = fila[1])
+
 
 class Categoria:
 
-    def __init__(self, categoria: dict):
-        self.id: int = categoria['id']
-        self.categoria: str = categoria['grupo']
+    def __init__(self, id: int, categoria: str):
+        self.id: int = id
+        self.categoria: str = categoria
+
+    @classmethod
+    def desde_dict(cls, categoria: dict):
+        return cls(id = categoria['id'], categoria = categoria['grupo'])
+
+    @classmethod
+    def desde_sql(cls, fila: tuple):
+        return cls(id = fila[0], categoria = fila[1])
+
 
 class ArchivoResumen:
 
-    def __init__(self, analisis: dict):
-        self.id:int = analisis['id']
-        self.parent_id: int = analisis.get("nota_id") or analisis.get("carta_id")
-        self.titulo: str = analisis['titulo']
-        self.cuerpo_texto: str = analisis['cuerpo_texto']
+    def __init__(self, id: int, parent_id: int, titulo: str, cuerpo_texto: str):
+        self.id:int = id
+        self.parent_id: int = parent_id
+        self.titulo: str = titulo
+        self.cuerpo_texto: str = cuerpo_texto
+
+    @classmethod
+    def desde_dict(cls, analisis: dict):
+        return cls(id = analisis['id'], 
+                   parent_id = analisis.get("nota_id") or analisis.get("carta_id"), 
+                   titulo = analisis['titulo'], 
+                   cuerpo_texto = analisis['cuerpo_texto'])
+
+    @classmethod
+    def desde_sql(cls, fila: tuple):
+        return cls(id = fila[0], 
+                   parent_id = fila[1], 
+                   titulo = fila[2], 
+                   cuerpo_texto = fila[3])
