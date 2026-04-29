@@ -8058,3 +8058,103 @@ AttributeError: 'Tema' object has no attribute 'nombre'
 2026-04-29 13:40:18,276 - __main__ - INFO - 72 - Ventana principal mostrada - Se inicia Main loop
 2026-04-29 13:40:28,046 - database.connection - INFO - 37 - Conexión cerrada
 2026-04-29 13:40:28,047 - __main__ - INFO - 77 - === Aplicación finalizada correctamente ===
+2026-04-29 14:56:51,658 - __main__ - INFO - 56 - === Iniciando la aplicación ===
+2026-04-29 14:56:51,658 - __main__ - INFO - 28 - Iniciando configuración de la aplicación El Porteño - Index
+- Versión: 3.0.0
+2026-04-29 14:56:51,721 - database.connection - INFO - 26 - Conexión establecida
+2026-04-29 14:56:51,722 - __main__ - INFO - 64 - Creando ventana principal
+2026-04-29 14:56:51,723 - ui.main_window - INFO - 35 - Creando widgets en MainWindow
+2026-04-29 14:56:51,723 - ui.main_window - INFO - 63 - --- CREANDO PÁGINA REVISTAS ---
+2026-04-29 14:56:51,749 - ui.main_window - INFO - 230 - --- FINALIZADA PÁGINA REVISTAS ---
+2026-04-29 14:56:51,749 - ui.main_window - INFO - 236 - --- CREANDO PÁGINA AUTORES ---
+2026-04-29 14:56:51,756 - ui.main_window - INFO - 358 - --- FINALIZADA PÁGINA AUTORES ---
+2026-04-29 14:56:51,756 - ui.main_window - INFO - 363 - --- CREANDO PÁGINA TEMAS ---
+2026-04-29 14:56:51,764 - ui.main_window - INFO - 424 - --- FINALIZADA PÁGINA TEMAS ---
+2026-04-29 14:56:51,764 - ui.main_window - INFO - 429 - --- CREANDO PÁGINA ANALISIS ---
+2026-04-29 14:56:51,770 - ui.main_window - INFO - 493 - --- FINALIZADA PÁGINA ANALISIS ---
+2026-04-29 14:56:51,770 - ui.main_window - INFO - 495 - --- INICIO PROCEDIMIENTOS INCIALES ---
+2026-04-29 14:56:51,770 - ui.main_window - INFO - 497 - --- FIN DE MAIN WINDOW ---
+2026-04-29 14:56:52,025 - __main__ - INFO - 72 - Ventana principal mostrada - Se inicia Main loop
+2026-04-29 14:57:13,676 - database.connection - INFO - 37 - Conexión cerrada
+2026-04-29 14:57:13,678 - __main__ - INFO - 77 - === Aplicación finalizada correctamente ===
+2026-04-29 15:00:55,293 - __main__ - INFO - 56 - === Iniciando la aplicación ===
+2026-04-29 15:00:55,294 - __main__ - INFO - 28 - Iniciando configuración de la aplicación El Porteño - Index
+- Versión: 3.0.0
+2026-04-29 15:00:55,345 - database.connection - INFO - 26 - Conexión establecida
+2026-04-29 15:00:55,345 - __main__ - INFO - 64 - Creando ventana principal
+2026-04-29 15:00:55,346 - ui.main_window - INFO - 35 - Creando widgets en MainWindow
+2026-04-29 15:00:55,347 - ui.main_window - INFO - 63 - --- CREANDO PÁGINA REVISTAS ---
+2026-04-29 15:00:55,386 - ui.main_window - INFO - 230 - --- FINALIZADA PÁGINA REVISTAS ---
+2026-04-29 15:00:55,386 - ui.main_window - INFO - 236 - --- CREANDO PÁGINA AUTORES ---
+2026-04-29 15:00:55,391 - ui.main_window - INFO - 358 - --- FINALIZADA PÁGINA AUTORES ---
+2026-04-29 15:00:55,391 - ui.main_window - INFO - 363 - --- CREANDO PÁGINA TEMAS ---
+2026-04-29 15:00:55,396 - ui.main_window - INFO - 424 - --- FINALIZADA PÁGINA TEMAS ---
+2026-04-29 15:00:55,396 - ui.main_window - INFO - 429 - --- CREANDO PÁGINA ANALISIS ---
+2026-04-29 15:00:55,401 - ui.main_window - INFO - 493 - --- FINALIZADA PÁGINA ANALISIS ---
+2026-04-29 15:00:55,401 - ui.main_window - INFO - 495 - --- INICIO PROCEDIMIENTOS INCIALES ---
+2026-04-29 15:00:55,401 - ui.main_window - INFO - 497 - --- FIN DE MAIN WINDOW ---
+2026-04-29 15:00:55,621 - __main__ - INFO - 72 - Ventana principal mostrada - Se inicia Main loop
+2026-04-29 15:04:27,937 - __main__ - ERROR - 49 - Excepción no manejada:
+Traceback (most recent call last):
+  File "/home/luc/Documents/10_Archivo/Revistas/El Porteño/ui/main_window.py", line 1192, in fb_grupos_on_tag_selected
+    self.actualizar_notas_analisis(selected_tag.id)
+  File "/home/luc/Documents/10_Archivo/Revistas/El Porteño/ui/main_window.py", line 926, in actualizar_notas_analisis
+    notas = utils.to_nota(notas)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/home/luc/Documents/10_Archivo/Revistas/El Porteño/utils.py", line 69, in to_nota
+    NotaServices.completar_extras(carga)
+  File "/home/luc/Documents/10_Archivo/Revistas/El Porteño/services.py", line 133, in completar_extras
+    NotaServices.cargar_archivo_resumen(nota)
+  File "/home/luc/Documents/10_Archivo/Revistas/El Porteño/services.py", line 182, in cargar_archivo_resumen
+    nota.analisis.append(archivo)
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'set' object has no attribute 'append'
+2026-04-29 15:07:17,830 - __main__ - INFO - 56 - === Iniciando la aplicación ===
+2026-04-29 15:07:17,830 - __main__ - INFO - 28 - Iniciando configuración de la aplicación El Porteño - Index
+- Versión: 3.0.0
+2026-04-29 15:07:17,880 - database.connection - INFO - 26 - Conexión establecida
+2026-04-29 15:07:17,880 - __main__ - INFO - 64 - Creando ventana principal
+2026-04-29 15:07:17,881 - ui.main_window - INFO - 35 - Creando widgets en MainWindow
+2026-04-29 15:07:17,882 - ui.main_window - INFO - 63 - --- CREANDO PÁGINA REVISTAS ---
+2026-04-29 15:07:17,905 - ui.main_window - INFO - 230 - --- FINALIZADA PÁGINA REVISTAS ---
+2026-04-29 15:07:17,905 - ui.main_window - INFO - 236 - --- CREANDO PÁGINA AUTORES ---
+2026-04-29 15:07:17,911 - ui.main_window - INFO - 358 - --- FINALIZADA PÁGINA AUTORES ---
+2026-04-29 15:07:17,911 - ui.main_window - INFO - 363 - --- CREANDO PÁGINA TEMAS ---
+2026-04-29 15:07:17,918 - ui.main_window - INFO - 424 - --- FINALIZADA PÁGINA TEMAS ---
+2026-04-29 15:07:17,918 - ui.main_window - INFO - 429 - --- CREANDO PÁGINA ANALISIS ---
+2026-04-29 15:07:17,923 - ui.main_window - INFO - 493 - --- FINALIZADA PÁGINA ANALISIS ---
+2026-04-29 15:07:17,923 - ui.main_window - INFO - 495 - --- INICIO PROCEDIMIENTOS INCIALES ---
+2026-04-29 15:07:17,923 - ui.main_window - INFO - 497 - --- FIN DE MAIN WINDOW ---
+2026-04-29 15:07:18,138 - __main__ - INFO - 72 - Ventana principal mostrada - Se inicia Main loop
+2026-04-29 15:07:30,964 - __main__ - ERROR - 49 - Excepción no manejada:
+Traceback (most recent call last):
+  File "/home/luc/Documents/10_Archivo/Revistas/El Porteño/ui/main_window.py", line 1196, in fb_grupos_on_tag_selected
+    self.vc_analisis.actualizar(selected_tag.id)
+  File "/home/luc/Documents/10_Archivo/Revistas/El Porteño/ui/widgets.py", line 650, in actualizar
+    cartas = utils.to_cartas(cartas)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/luc/Documents/10_Archivo/Revistas/El Porteño/utils.py", line 84, in to_cartas
+    CartaServices.cargar_archivo_resumen(carga)
+  File "/home/luc/Documents/10_Archivo/Revistas/El Porteño/services.py", line 235, in cargar_archivo_resumen
+    carta.archivo_resumen.append(elemento)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'set' object has no attribute 'append'
+2026-04-29 15:09:46,737 - __main__ - INFO - 56 - === Iniciando la aplicación ===
+2026-04-29 15:09:46,737 - __main__ - INFO - 28 - Iniciando configuración de la aplicación El Porteño - Index
+- Versión: 3.0.0
+2026-04-29 15:09:46,790 - database.connection - INFO - 26 - Conexión establecida
+2026-04-29 15:09:46,790 - __main__ - INFO - 64 - Creando ventana principal
+2026-04-29 15:09:46,791 - ui.main_window - INFO - 35 - Creando widgets en MainWindow
+2026-04-29 15:09:46,792 - ui.main_window - INFO - 63 - --- CREANDO PÁGINA REVISTAS ---
+2026-04-29 15:09:46,834 - ui.main_window - INFO - 230 - --- FINALIZADA PÁGINA REVISTAS ---
+2026-04-29 15:09:46,834 - ui.main_window - INFO - 236 - --- CREANDO PÁGINA AUTORES ---
+2026-04-29 15:09:46,845 - ui.main_window - INFO - 358 - --- FINALIZADA PÁGINA AUTORES ---
+2026-04-29 15:09:46,845 - ui.main_window - INFO - 363 - --- CREANDO PÁGINA TEMAS ---
+2026-04-29 15:09:46,852 - ui.main_window - INFO - 424 - --- FINALIZADA PÁGINA TEMAS ---
+2026-04-29 15:09:46,852 - ui.main_window - INFO - 429 - --- CREANDO PÁGINA ANALISIS ---
+2026-04-29 15:09:46,858 - ui.main_window - INFO - 493 - --- FINALIZADA PÁGINA ANALISIS ---
+2026-04-29 15:09:46,859 - ui.main_window - INFO - 495 - --- INICIO PROCEDIMIENTOS INCIALES ---
+2026-04-29 15:09:46,859 - ui.main_window - INFO - 497 - --- FIN DE MAIN WINDOW ---
+2026-04-29 15:09:47,082 - __main__ - INFO - 72 - Ventana principal mostrada - Se inicia Main loop
+2026-04-29 15:09:58,582 - database.connection - INFO - 37 - Conexión cerrada
+2026-04-29 15:09:58,583 - __main__ - INFO - 77 - === Aplicación finalizada correctamente ===
