@@ -9,10 +9,22 @@ class Config:
     #Conf. DB
     load_dotenv()
 
-    DB_HOST: str = os.getenv("DB_HOST")
-    DB_NAME: str = os.getenv("DB_NAME")
-    DB_USER: str = os.getenv("DB_USER")
-    DB_PASSWORD: str = os.getenv("DB_PASSWORD")
+    # Conexión remota
+    DB_HOST_r: str = os.getenv("DB_HOST_r")
+    DB_NAME_r: str = os.getenv("DB_NAME_r")
+    DB_USER_r: str = os.getenv("DB_USER_r")
+    DB_PASSWORD_r: str = os.getenv("DB_PASSWORD_r")
+    DB_PORT_r: int= int(os.getenv("DB_PORT_r", 3306))
+    DB_SSL_CA_r: str = os.getenv("DB_SSL_CA_r")
+
+    # Conexión local
+    DB_HOST_l: str = os.getenv("DB_HOST_l")
+    DB_NAME_l: str = os.getenv("DB_NAME_l")
+    DB_USER_l: str = os.getenv("DB_USER_l")
+    DB_PASSWORD_l: str = os.getenv("DB_PASSWORD_l")
+
+    
+
 
     # Necesarios para la visualización y API:
 

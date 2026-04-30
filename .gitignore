@@ -17,3 +17,6 @@
 **/main_Version anterior.py
 **/.env
 **/Analisis_R
+**/certs
+**/app.log
+**/database/elporteno_backup.sql

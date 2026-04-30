@@ -1,4 +1,4 @@
-QUERY_CONFIGURACION_INICIAL = "SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY',''));"
+QUERY_CONFIGURACION_INICIAL = "SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY',''));"
 
 QUERY_REGISTRO_MODIFICACIONES = "INSERT INTO registro_modificaciones (fecha, sql_query, instancia) VALUES (NOW(), %s, %s)"
 
@@ -266,4 +266,35 @@ QUERY_UPDATE_CARTA = """
 QUERY_ADD_CARTA_A_GRUPO_ANALISIS = """
     INSERT INTO carta_grupo (carta_id, grupo_id)
     VALUES (%s, %s);
+"""
+
+QUERY_GET_AUTORES_POR_REVISTA = """
+    SELECT a.id, a.nombre, a.apellido, a.genero, a.comentarios, na.nota_id 
+    FROM autor a
+    JOIN nota_autor na ON na.autor_id = a.id
+    JOIN nota n ON n.id = na.nota_id
+    WHERE n.revista_id = %s;
+"""
+
+QUERY_GET_TEMAS_POR_REVISTA = """
+    SELECT t.id, t.tema, nt.nota_id
+    FROM tema t
+    JOIN nota_tema nt ON nt.tema_id = t.id
+    JOIN nota n ON n.id = nt.nota_id
+    WHERE n.revista_id = %s;
+"""
+
+QUERY_GET_GRUPO_ANALISIS_POR_REVISTA = """
+    SELECT g.id, g.grupo, ng.nota_id
+    FROM grupo g
+    JOIN nota_grupo ng ON ng.grupo_id = g.id
+    JOIN nota n ON n.id = ng.nota_id
+    WHERE n.revista_id = %s;
+"""
+
+QUERY_GET_ARCHIVO_REVISTA_POR_REVISTA = """
+    SELECT a.id, a.nota_id, a.cuerpo_texto, a.titulo
+    FROM analisis a
+    JOIN nota n ON n.id = a.nota_id
+    WHERE n.revista_id = %s;
 """

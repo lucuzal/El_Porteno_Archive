@@ -78,7 +78,7 @@ def main(): #Función principal
         return 0
 
     except Exception as e:
-        logger.critical(f"Error crítico al iniciar aplicación: {e}")
+       logger.critical(f"Error crítico al iniciar aplicación: {e}")
 
 if __name__ == "__main__":
     sys.exit(main())

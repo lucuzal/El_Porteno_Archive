@@ -41,10 +41,15 @@ from database.querys import (QUERY_CONFIGURACION_INICIAL,
                              QUERY_ADD_CARTA_A_GRUPO_ANALISIS,
                              QUERY_AGREGAR_ARCHIVO_RESUMEN_CARTA,
                              QUERY_MODIFICAR_ARCHIVO_RESUMEN_CARTA,
-                             QUERY_DELETE_CARTA_DE_GRUPO_ANALISIS)
+                             QUERY_DELETE_CARTA_DE_GRUPO_ANALISIS,
+                             QUERY_GET_AUTORES_POR_REVISTA,
+                             QUERY_GET_TEMAS_POR_REVISTA,
+                             QUERY_GET_GRUPO_ANALISIS_POR_REVISTA,
+                             QUERY_GET_ARCHIVO_REVISTA_POR_REVISTA)
 
 
 from models import Revista, Nota, Autor, Tema, Carta, StaffMiembro, Categoria, ArchivoResumen
+from collections import defaultdict
 import utils
 import logging
 
@@ -96,17 +101,101 @@ class RevistaServices:
         notas = NotaServices.get_notas(revista.id)
         for elemento in notas:
             nota = Nota(elemento)
-            NotaServices.completar_extras(nota)
+            #NotaServices.completar_extras(nota)
             revista.notas.append(nota)
+        RevistaServices.completar_extras_full_revista(revista)
         RevistaServices.establecer_estado_de_la_revista(revista)
+
+    @staticmethod
+    def completar_extras_full_revista(revista: Revista):
+        autores = RevistaServices.get_autores(revista.id)
+        RevistaServices.cargar_autores(revista, autores)
+        temas = RevistaServices.get_temas(revista.id)
+        RevistaServices.cargar_temas(revista, temas)
+        grupos = RevistaServices.get_grupos(revista.id)
+        RevistaServices.cargar_grupos(revista, grupos)
+        archivos_resumen = RevistaServices.get_archivo_resumen(revista.id)
+        RevistaServices.cargar_archivo_resumen(revista, archivos_resumen)
+        
+        
+    @staticmethod
+    def get_autores(revista_id: int) -> tuple[dict] | None:
+        autores_revista = None
+        try:
+            vs = DataBaseConnection.execute_query(QUERY_GET_AUTORES_POR_REVISTA, params=(revista_id,), select_multiple_results=True)
+            autores_revista = vs
+            return autores_revista
+        except Exception as e:
+            logger.error(f"Falló la ejecución sql QUERY_GET_AUTORES_POR_REVISTA: {e}")
+
+    @staticmethod
+    def cargar_autores(revista: Revista, autores: tuple[dict]):
+        autores_por_nota= defaultdict(list)
+        for a in autores:
+            autores_por_nota[a["nota_id"]].append(Autor(a))
+
+        for nota in revista.notas:
+            nota.autores = autores_por_nota.get(nota.id, [])
+
+    @staticmethod
+    def get_temas(revista_id: int) -> tuple[dict] | None:
+        try:
+            return DataBaseConnection.execute_query(QUERY_GET_TEMAS_POR_REVISTA, params=(revista_id,), select_multiple_results=True) or []
+        except Exception as e:
+            logger.error(f"Falló la ejecución sql QUERY_GET_TEMAS_POR_REVISTA: {e}")
+            return []
+
+    @staticmethod
+    def cargar_temas(revista: Revista, temas: tuple[dict]):
+        temas_por_nota = defaultdict(list)
+        for t in temas:
+            temas_por_nota[t["nota_id"]].append(Tema(t))
+
+        for nota in revista.notas:
+            nota.temas = temas_por_nota.get(nota.id, [])
+
+    @staticmethod
+    def get_grupos(revista_id: int) -> tuple[dict] | None:
+        try:
+            return DataBaseConnection.execute_query(QUERY_GET_GRUPO_ANALISIS_POR_REVISTA, params=(revista_id,), select_multiple_results=True) or []
+        except Exception as e:
+            logger.error(f"Falló la ejecución sql QUERY_GET_TEMAS_POR_REVISTA: {e}")
+            return []
+    
+    @staticmethod
+    def cargar_grupos(revista: Revista, grupos: tuple[dict]):
+        grupos_por_nota = defaultdict(list)
+        for g in grupos:
+            grupos_por_nota[g["nota_id"]].append(Categoria(g))
+        
+        for nota in revista.notas:
+            nota.categorias = grupos_por_nota.get(nota.id, [])
+
+    @staticmethod
+    def get_archivo_resumen(revista_id: int) -> tuple[dict] | None:
+        try:
+            return DataBaseConnection.execute_query(QUERY_GET_ARCHIVO_REVISTA_POR_REVISTA, params=(revista_id,), select_multiple_results=True) or []
+        except Exception as e:
+            logger.error(f"Falló la ejecución sql QUERY_GET_AUTORES_POR_REVISTA: {e}")
+            return []
+
+    @staticmethod
+    def cargar_archivo_resumen(revista: Revista, archivos_resumen: tuple[dict]):
+        archivo_por_nota= defaultdict(list)
+        for a in archivos_resumen:
+            archivo_por_nota[a["nota_id"]].append(ArchivoResumen(a))
+
+        for nota in revista.notas:
+            nota.archivos = archivo_por_nota.get(nota.id,)
+
 
     @staticmethod
     def cargar_correo(revista: Revista):
         correo = CartaServices.get_cartas(revista.id)
         for elemento in correo:
             carta = Carta(elemento)
-            CartaServices.cargar_archivo_resumen(carta)
-            CartaServices.cargar_grupo_analisis(carta)
+            #CartaServices.cargar_archivo_resumen(carta)
+            #CartaServices.cargar_grupo_analisis(carta)
             revista.correo.append(carta)
 
 
@@ -226,7 +315,7 @@ class NotaServices:
         archivos = None
         try:
             archivos = DataBaseConnection.execute_query(QUERY_GET_ARCHIVO_RESUMEN_POR_NOTA_ID, params=(nota_id,), select_multiple_results=True)
-            return archivos
+            return archivos or {}
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY GET ARCHIVO RESUMEN POR NOTA_ID: {e}")
 
