@@ -50,7 +50,7 @@ def handle_exception(exc_type, exc_value, exc_traceback): #Manejo de excepciones
     sys.exit(1)
 
 def main(): #Función principal
-    try:
+#    try:
         sys.excepthook = handle_exception
 
         logger.info("=== Iniciando la aplicación ===")
@@ -77,8 +77,8 @@ def main(): #Función principal
         logger.info("=== Aplicación finalizada correctamente ===")
         return 0
 
-    except Exception as e:
-       logger.critical(f"Error crítico al iniciar aplicación: {e}")
+#    except Exception as e:
+#       logger.critical(f"Error crítico al iniciar aplicación: {e}")
 
 if __name__ == "__main__":
     sys.exit(main())

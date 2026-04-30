@@ -86,12 +86,12 @@ class RevistaServices:
 
     @staticmethod
     def cargar_autores(revista: Revista, autores: tuple[dict]):
-        autores_por_nota= defaultdict(list)
+        autores_por_nota= defaultdict(set)
         for a in autores:
-            autores_por_nota[a["nota_id"]].append(Autor(a))
+            autores_por_nota[a["nota_id"]].add(Autor.desde_dic(a))
 
         for nota in revista.notas:
-            nota.autores = autores_por_nota.get(nota.id, [])
+            nota.autores = autores_por_nota.get(nota.id, set())
 
     @staticmethod
     def get_temas(revista_id: int) -> tuple[dict] | None:
@@ -103,29 +103,29 @@ class RevistaServices:
 
     @staticmethod
     def cargar_temas(revista: Revista, temas: tuple[dict]):
-        temas_por_nota = defaultdict(list)
+        temas_por_nota = defaultdict(set)
         for t in temas:
-            temas_por_nota[t["nota_id"]].append(Tema(t))
+            temas_por_nota[t["nota_id"]].add(Tema.desde_dict(t))
 
         for nota in revista.notas:
-            nota.temas = temas_por_nota.get(nota.id, [])
+            nota.temas = temas_por_nota.get(nota.id, set())
 
     @staticmethod
     def get_grupos(revista_id: int) -> tuple[dict] | None:
         try:
-            return DataBaseConnection.execute_query(QUERY_GET_GRUPO_ANALISIS_POR_REVISTA, params=(revista_id,), select_multiple_results=True) or []
+            return DataBaseConnection.execute_query(query.QUERY_GET_GRUPO_ANALISIS_POR_REVISTA, params=(revista_id,), select_multiple_results=True) or []
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY_GET_TEMAS_POR_REVISTA: {e}")
             return []
     
     @staticmethod
     def cargar_grupos(revista: Revista, grupos: tuple[dict]):
-        grupos_por_nota = defaultdict(list)
+        grupos_por_nota = defaultdict(set)
         for g in grupos:
-            grupos_por_nota[g["nota_id"]].append(Categoria(g))
+            grupos_por_nota[g["nota_id"]].add(Categoria.desde_dict(g))
         
         for nota in revista.notas:
-            nota.categorias = grupos_por_nota.get(nota.id, [])
+            nota.categorias = grupos_por_nota.get(nota.id, set())
 
     @staticmethod
     def get_archivo_resumen(revista_id: int) -> tuple[dict] | None:
@@ -137,12 +137,12 @@ class RevistaServices:
 
     @staticmethod
     def cargar_archivo_resumen(revista: Revista, archivos_resumen: tuple[dict]):
-        archivo_por_nota= defaultdict(list)
+        archivo_por_nota= defaultdict(set)
         for a in archivos_resumen:
-            archivo_por_nota[a["nota_id"]].append(ArchivoResumen(a))
+            archivo_por_nota[a["nota_id"]].add(ArchivoResumen.desde_dict(a))
 
         for nota in revista.notas:
-            nota.archivos = archivo_por_nota.get(nota.id,)
+            nota.archivos = archivo_por_nota.get(nota.id, set())
 
 
     @staticmethod
