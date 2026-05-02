@@ -115,6 +115,11 @@ class Nota:
                    relacionado_memoria = fila[10], 
                    comentarios = fila[11])
 
+    def buscar_nota_por_id(self, id: int):
+        for n in self.notas:
+            if n.id == id:
+                return n
+        return None
 
 class StaffMiembro:
 

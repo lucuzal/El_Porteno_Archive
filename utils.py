@@ -19,8 +19,6 @@ def get_binario_hexagrama(numero_hexagrama: int) -> str:
     binario = config.HEXAGRAMA[columna]
     return binario
 
-# devuelve 
-
 def get_lineas_hexagrama(binario_hexagrama: str) -> str:
     lineas = ""
     for l in binario_hexagrama:

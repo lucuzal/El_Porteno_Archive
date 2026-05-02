@@ -341,6 +341,12 @@ class EntradaComentarios:
             self.tv.set_editable(False)
         else:
             self.tv.set_editable(True)
+    
+    def set_editable(self, editable: bool):
+        if editable:
+            self.tv.set_editable(False)
+        else:
+            self.tv.set_editable(True)
 
 class VisualizadorNotas(Gtk.Box):
 
