@@ -67,75 +67,82 @@ class ListaMulti(Gtk.Box):
         self._es_autor: bool = es_autor 
 
         #widgets
-        self.search = Gtk.SearchEntry()
-        self.lista_completa = Gtk.TreeView()
+        self._search = Gtk.SearchEntry()
+        self._lista_completa = Gtk.TreeView()
         scroll_1 = Gtk.ScrolledWindow()
-        scroll_1.add(self.lista_completa)
+        scroll_1.add(self._lista_completa)
         scroll_1.set_vexpand(True)
         scroll_1.set_min_content_height(200)
         ls_f = Gtk.ListStore(int, str)
         ls_f.append([0,""])
-        self.lista_completa.set_model(ls_f)
+        self._lista_completa.set_model(ls_f)
         renderer = Gtk.CellRendererText()
         column = Gtk.TreeViewColumn("id", renderer, text=0)
         column.set_resizable(False)
         column.set_visible(False)
-        self.lista_completa.append_column(column)
+        self._lista_completa.append_column(column)
         column = Gtk.TreeViewColumn("Nombre", renderer, text=1)
         column.set_resizable(False)
         column.set_visible(True)
-        self.lista_completa.append_column(column)
-        self.lista_completa.set_headers_visible(False)
-        self.lista_completa.set_enable_search(False)
+        self._lista_completa.append_column(column)
+        self._lista_completa.set_headers_visible(False)
+        self._lista_completa.set_enable_search(False)
 
-        self.lista_seleccionada = Gtk.TreeView()
+
+        self._lista_seleccionada = Gtk.TreeView()
         scroll_2 = Gtk.ScrolledWindow()
-        scroll_2.add(self.lista_seleccionada)
+        scroll_2.add(self._lista_seleccionada)
         scroll_2.set_vexpand(True)
         ls_s = Gtk.ListStore(int, str)
         ls_s.append([0,""])
-        self.lista_seleccionada.set_model(ls_s)
+        self._lista_seleccionada.set_model(ls_s)
         renderer = Gtk.CellRendererText()
         column = Gtk.TreeViewColumn("id", renderer, text=0)
         column.set_resizable(False)
         column.set_visible(False)
-        self.lista_seleccionada.append_column(column)
+        self._lista_seleccionada.append_column(column)
         column = Gtk.TreeViewColumn("Nombre", renderer, text=1)
         column.set_resizable(False)
         column.set_visible(True)
-        self.lista_seleccionada.append_column(column)
-        self.lista_seleccionada.set_headers_visible(False)
-        self.lista_seleccionada.set_enable_search(False)
+        self._lista_seleccionada.append_column(column)
+        self._lista_seleccionada.set_headers_visible(False)
+        self._lista_seleccionada.set_enable_search(False)
         
 
-        self.bt_cargar = Gtk.Button(label="-->")
+        self._bt_cargar = Gtk.Button(label="-->")
 
         self._connect_signals()
 
         #cargar
 
-        box_1.pack_start(self.search, True, True, 0)
+        box_1.pack_start(self._search, True, True, 0)
         box_1.pack_start(scroll_1, True, True, 0)
 
         self.pack_start(box_1, False, False, 0)
-        self.pack_start(self.bt_cargar, False, False, 0)
+        self.pack_start(self._bt_cargar, False, False, 0)
         self.pack_start(scroll_2, True, True, 0)
 
     def _connect_signals(self):
-        self.search.connect("changed", self.search_changed)
+        self._search.connect("changed", self._search_changed)
+        self._lista_completa.connect("row_activated", self._lista_completa_row_activated)
+        self._bt_cargar.connect("clicked", self._bt_cargar_clicked)
+        self._lista_seleccionada.connect("row_activated", self._lista_seleccionada_row_activated)
 
-    def set_editable(self, editable: bool = True):
+    def set_editable(self, editable: bool = True): #Configura el widget si es editable o no
         if editable:
-            self.search.set_editable(True)
-            self.bt_cargar.set_sensitive(True)
+            self._search.set_editable(True)
+            self._bt_cargar.set_sensitive(True)
         else:
-            self.search.set_editable(False)
-            self.bt_cargar.set_sensitive(False)
+            self._search.set_editable(False)
+            self._bt_cargar.set_sensitive(False)
             self._full_elementos = []
 
-    def set_elementos_seleccionados_full(self, ingresado: set[Autor | Tema]):
+    def set_elementos_seleccionados_full(self, ingresado: set[Autor | Tema]): #Carga los elementos seleccionados para esa nota
         self._lista = ingresado.copy()
-        ls = self.lista_seleccionada.get_model()
+        self._cargar_lista_en_treeview()
+
+    def _cargar_lista_en_treeview(self): #Carga los elementos seleccionados (_lista) en el treeview
+        ls = self._lista_seleccionada.get_model()
         ls.clear()
         
         if self._lista:
@@ -148,9 +155,9 @@ class ListaMulti(Gtk.Box):
         else:
             ls.append([0,""])
 
-    def cargar_todos_los_elementos(self, elementos: tuple[Autor | Tema]):
+    def cargar_todos_los_elementos(self, elementos: tuple[Autor | Tema]): #Carga todos los elementos para buscar entre ellos
         self._full_elementos = elementos
-        ls = self.lista_completa.get_model()
+        ls = self._lista_completa.get_model()
         ls.clear()
 
         if self._full_elementos:
@@ -163,9 +170,9 @@ class ListaMulti(Gtk.Box):
         else:
             ls.append([0, ""])
 
-    def cargar_elementos_filtrados(self, elementos: list[Autor | Tema]):
+    def cargar_elementos_filtrados(self, elementos: list[Autor | Tema]): #Filtra el treeview según se escribe en self.search (Entry)
         self._filtrado_elementos = elementos
-        ls = self.lista_completa.get_model()
+        ls = self._lista_completa.get_model()
         ls.clear()
 
         if self._filtrado_elementos:
@@ -178,12 +185,24 @@ class ListaMulti(Gtk.Box):
         else:
             ls.append([0, ""])
 
-    def clear(self):
-        ls: Gtk.ListStore = self.lista_seleccionada.get_model()
+    def clear(self): #Borra todo lo cargado
+        ls: Gtk.ListStore = self._lista_seleccionada.get_model()
         ls.clear()
         self._lista.clear()
 
-    def search_changed(self, widget: Gtk.Entry):
+    def _seleccionar_elemento(self, elemento: Autor | Tema): #Selecciona del listado largo
+        self._lista.add(elemento)
+        self._cargar_lista_en_treeview()
+
+    def _get_id_from_tree_view_selection(self, widget: Gtk.TreeView, path: Gtk.TreePath) -> int:
+        model = widget.get_model()
+        i = model.get_iter(path)
+        return model.get_value(i,0)
+
+
+    # SEÑALES ACTIVADAS POR WIDGETS
+
+    def _search_changed(self, widget: Gtk.Entry):
         cadena:str = widget.get_text().lower()
 
         def coincide_autor(e: Autor) -> bool:
@@ -201,7 +220,43 @@ class ListaMulti(Gtk.Box):
             resultado = list(filter(coincide_tema, self._full_elementos)) 
         
         self.cargar_elementos_filtrados(resultado)
-                
+    
+    def _lista_completa_row_activated(self, widget: Gtk.TreeView, path: Gtk.TreePath, column: Gtk.TreeViewColumn):
+        id_from_widget: int = self._get_id_from_tree_view_selection(widget, path)
+        elemento: Autor | Tema = None
+        if not id_from_widget == 0:
+            if self._filtrado_elementos:
+                elemento = next((e for e in self._filtrado_elementos if (e.id == id_from_widget)),None)
+            else:
+                elemento = next((e for e in self._full_elementos if (e.id == id_from_widget)),None)
+
+        if elemento:
+            if elemento in self._lista:
+                print("Elemento ya cargado")
+            else:
+                self._seleccionar_elemento(elemento)
+
+    def _bt_cargar_clicked(self, widget: Gtk.Button):
+        selection = self._lista_completa.get_selection()
+        model, tree_iter = selection.get_selected()
+        if tree_iter is None:
+            return
+        path = model.get_path(tree_iter)
+        self._lista_completa.emit("row_activated", path, None) #None en Column
+
+    def _lista_seleccionada_row_activated(self, widget: Gtk.TreeView, path:Gtk.TreePath, column:Gtk.TreeViewColumn):
+        id_from_widget: int = self._get_id_from_tree_view_selection(widget, path)
+        elemento: Autor | Tema = None
+        if not id_from_widget == 0:
+            if self._lista: 
+                elemento = next((e for e in self._lista if (e.id == id_from_widget)), None)
+                self._lista.remove(elemento)
+        
+        self._cargar_lista_en_treeview()
+        
+
+
+        
 
 
 class LabelNota(Gtk.Box):
