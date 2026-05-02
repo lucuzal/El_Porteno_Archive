@@ -3,7 +3,7 @@ import os.path
 import re
 
 
-from gi.repository import Gtk, Gdk, GdkPixbuf
+from gi.repository import Gtk, Gdk, GdkPixbuf # type: ignore
 import logging
 
 
@@ -816,8 +816,8 @@ class MainWindow(Gtk.Window):
         self.txt_comentarios_sobre_autores.set_text(autor.comentarios)
         lista_notas = AutorServices.get_notas_de_autor(autor.id)
         self.lb_n_notas_autores.set_markup(f"<span foreground='#d8dee9'><small><i>{autor.apellido} tiene {len(lista_notas)} notas cargadas</i></small></span>")
-        notas = utils.to_nota(lista_notas)
-        self.vn_autor.cargar_notas(notas)
+        #notas = utils.to_nota(lista_notas)
+        #self.vn_autor.cargar_notas(notas)
 
     def get_data_from_app_state_autor(self):
         data = {
@@ -938,7 +938,7 @@ class MainWindow(Gtk.Window):
         self.set_widgets_analisis_como_editables(False)
 
     def lanzar_notas_windows(self):
-        window_nota = DialogNotas(self.app_state)
+        window_nota = DialogNotas(self.app_state, fun_actualizar_nota=self.actualizar_nota_seleccionada_desde_notas_windows)
         window_nota.set_transient_for(self)
         window_nota.set_modal(True)
         # Conectar señal de cierre
@@ -987,6 +987,7 @@ class MainWindow(Gtk.Window):
 
 
     def bt_agregar_nota_en_revista_clicked(self, widget):
+        self.app_state.nota_seleccionada = None
         self.lanzar_notas_windows()
 
     def bt_cartas_en_revista_clicked(self, widget):
@@ -1030,6 +1031,10 @@ class MainWindow(Gtk.Window):
             id_nota = model.get_value(i, 0)
             self.app_state.nota_seleccionada = self.app_state.revista_seleccionada.buscar_nota_por_id(id_nota)
             self.lanzar_notas_windows()
+
+    def actualizar_nota_seleccionada_desde_notas_windows(self, nota_id: int):
+        self.vn_revista.seleccionar_nota_segun_id(nota_id)
+
 
 
     def on_new_archivo_resumen(self, widget, id_nota):

@@ -404,7 +404,7 @@ class CartaServices:
 class AutorServices:
 
     @staticmethod
-    def get_lista_autores_por_nombre(nombre: str):
+    def get_lista_autores_por_nombre(nombre: str = ""):
         autores = None
         try:
             nombre_con_comodines = f"%{nombre}%"

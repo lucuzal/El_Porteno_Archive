@@ -1,5 +1,5 @@
 import ui.gi_setup
-from gi.repository import Gtk, GLib, Gdk
+from gi.repository import Gtk, Gdk # type: ignore
 
 import sys
 import logging

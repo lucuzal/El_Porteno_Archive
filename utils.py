@@ -4,7 +4,7 @@ from config import config
 from models import Autor, StaffMiembro, Nota, Tema, Categoria, Carta
 from typing import Union
 from datetime import datetime
-from gi.repository import Gtk
+from gi.repository import Gtk # type: ignore
 from html.parser import HTMLParser
 from services import CartaServices
 import html
@@ -14,21 +14,21 @@ import html
 
 # devuelve un número binario que se corresponde a un número del hexagrama del I-CHING
 
-def get_binario_hexagrama(numero_hexagrama: int):
+def get_binario_hexagrama(numero_hexagrama: int) -> str:
     columna = f"h{numero_hexagrama}"
     binario = config.HEXAGRAMA[columna]
     return binario
 
 # devuelve 
 
-def get_lineas_hexagrama(binario_hexagrama: str):
+def get_lineas_hexagrama(binario_hexagrama: str) -> str:
     lineas = ""
     for l in binario_hexagrama:
         lineas += "____________\n" if l == "1" else "_____  _____\n"
 
     return lineas
 
-def get_nombre_completo(persona: Union[Autor, StaffMiembro], apellido_primero: bool = False):
+def get_nombre_completo(persona: Union[Autor, StaffMiembro], apellido_primero: bool = False) -> str:
     if apellido_primero:
         if persona.nombre == "":
             return persona.apellido
@@ -44,10 +44,6 @@ def changes_were_made(original: dict, final: dict):
 
     return False if original == final else True
 
-    def cargar_texto(self, fecha: datetime):
-        texto = fecha.strftime("%B").upper() + " " + str(fecha.year)
-        self._texto = texto
-
 def formato_fecha(fecha: datetime, formato: str = "entera_digitos"):
     texto = None
     if formato == "entera_digitos":
@@ -60,30 +56,35 @@ def formato_fecha(fecha: datetime, formato: str = "entera_digitos"):
         texto = str(fecha.year)
     return texto
 
-def to_nota(lista_notas: list[dict]):
+def to_nota(lista_notas: list[dict]) -> list[Nota]:
     from services import NotaServices
     notas = []
     if lista_notas:
         for elemento in lista_notas:
             carga = Nota.desde_dict(elemento)
-            NotaServices.completar_extras(carga)
+            #NotaServices.completar_extras(carga)
             notas.append(carga)
     return notas
 
-def to_tema(lista_temas: list[dict]):
+def to_tema(lista_temas: list[dict]) -> list[Tema]:
     temas = []
     for elemento in lista_temas:
         carga = Tema.desde_dict(elemento)
         temas.append(carga)
     return temas
 
-def to_cartas(lista_cartas: list[dict]):
+def to_cartas(lista_cartas: list[dict]) -> list[Carta]:
     cartas = []
     for elemento in lista_cartas:
         carga = Carta.desde_dict(elemento)
         CartaServices.cargar_archivo_resumen(carga)
         cartas.append(carga)
     return cartas
+
+def to_autor(lista_autores: list[dict] | tuple[dict]) -> list[Autor]:
+    autores = []
+    for a in lista_autores: autores.append(Autor.desde_dic(a))
+    return autores
 
 def is_in_tags(tema: Tema, lista_temas: list[Tema]):
     for elemento in lista_temas:

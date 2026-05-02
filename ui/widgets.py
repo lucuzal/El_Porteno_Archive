@@ -56,12 +56,15 @@ class MsgBoxInfo(Gtk.MessageDialog):
 
 class ListaMulti(Gtk.Box):
 
-    def __init__(self):
+    def __init__(self, es_autor: bool):
         super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
 
         box_1 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
 
-        self._lista = set()
+        self._lista: set = set()
+        self._full_elementos: list = []
+        self._filtrado_elementos: list = []
+        self._es_autor: bool = es_autor 
 
         #widgets
         self.search = Gtk.SearchEntry()
@@ -69,14 +72,29 @@ class ListaMulti(Gtk.Box):
         scroll_1 = Gtk.ScrolledWindow()
         scroll_1.add(self.lista_completa)
         scroll_1.set_vexpand(True)
+        scroll_1.set_min_content_height(200)
+        ls_f = Gtk.ListStore(int, str)
+        ls_f.append([0,""])
+        self.lista_completa.set_model(ls_f)
+        renderer = Gtk.CellRendererText()
+        column = Gtk.TreeViewColumn("id", renderer, text=0)
+        column.set_resizable(False)
+        column.set_visible(False)
+        self.lista_completa.append_column(column)
+        column = Gtk.TreeViewColumn("Nombre", renderer, text=1)
+        column.set_resizable(False)
+        column.set_visible(True)
+        self.lista_completa.append_column(column)
+        self.lista_completa.set_headers_visible(False)
+        self.lista_completa.set_enable_search(False)
 
         self.lista_seleccionada = Gtk.TreeView()
         scroll_2 = Gtk.ScrolledWindow()
         scroll_2.add(self.lista_seleccionada)
         scroll_2.set_vexpand(True)
-        ls = Gtk.ListStore(int, str)
-        ls.append([0,""])
-        self.lista_seleccionada.set_model(ls)
+        ls_s = Gtk.ListStore(int, str)
+        ls_s.append([0,""])
+        self.lista_seleccionada.set_model(ls_s)
         renderer = Gtk.CellRendererText()
         column = Gtk.TreeViewColumn("id", renderer, text=0)
         column.set_resizable(False)
@@ -92,6 +110,8 @@ class ListaMulti(Gtk.Box):
 
         self.bt_cargar = Gtk.Button(label="-->")
 
+        self._connect_signals()
+
         #cargar
 
         box_1.pack_start(self.search, True, True, 0)
@@ -101,6 +121,9 @@ class ListaMulti(Gtk.Box):
         self.pack_start(self.bt_cargar, False, False, 0)
         self.pack_start(scroll_2, True, True, 0)
 
+    def _connect_signals(self):
+        self.search.connect("changed", self.search_changed)
+
     def set_editable(self, editable: bool = True):
         if editable:
             self.search.set_editable(True)
@@ -108,21 +131,77 @@ class ListaMulti(Gtk.Box):
         else:
             self.search.set_editable(False)
             self.bt_cargar.set_sensitive(False)
+            self._full_elementos = []
 
-    def set_elementos_seleccionados(self, ingresado: set[Autor | Tema]):
-        self._lista = list(ingresado)
-        ls: Gtk.ListStore = self.lista_seleccionada.get_model()
+    def set_elementos_seleccionados_full(self, ingresado: set[Autor | Tema]):
+        self._lista = ingresado.copy()
+        ls = self.lista_seleccionada.get_model()
         ls.clear()
         
         if self._lista:
-            for e in self._lista:
-                if type(e) == Autor:
-                    ls.append([e.id, utils.get_nombre_completo(e)])
-                else:
+            if self._es_autor:
+                for e in self._lista:
+                        ls.append([e.id, utils.get_nombre_completo(e)])
+            else:
+                for e in self._lista:
                     ls.append([e.id, e.tema])
         else:
             ls.append([0,""])
 
+    def cargar_todos_los_elementos(self, elementos: tuple[Autor | Tema]):
+        self._full_elementos = elementos
+        ls = self.lista_completa.get_model()
+        ls.clear()
+
+        if self._full_elementos:
+            if self._es_autor:
+                for e in self._full_elementos:
+                    ls.append([e.id, utils.get_nombre_completo(e, True)])
+            else:
+                for e in self._full_elementos:
+                    ls.append([e.id, e.tema])
+        else:
+            ls.append([0, ""])
+
+    def cargar_elementos_filtrados(self, elementos: list[Autor | Tema]):
+        self._filtrado_elementos = elementos
+        ls = self.lista_completa.get_model()
+        ls.clear()
+
+        if self._filtrado_elementos:
+            if self._es_autor:
+                for e in self._filtrado_elementos:
+                    ls.append([e.id, utils.get_nombre_completo(e, True)])
+            else:
+                for e in self._filtrado_elementos:
+                    ls.append([e.id, e.tema])
+        else:
+            ls.append([0, ""])
+
+    def clear(self):
+        ls: Gtk.ListStore = self.lista_seleccionada.get_model()
+        ls.clear()
+        self._lista.clear()
+
+    def search_changed(self, widget: Gtk.Entry):
+        cadena:str = widget.get_text().lower()
+
+        def coincide_autor(e: Autor) -> bool:
+            return (cadena in e.nombre.lower() 
+                    or cadena in e.apellido.lower() 
+                    or cadena in utils.get_nombre_completo(e).lower())
+        
+        def coincide_tema(e: Tema) -> bool:
+            return cadena in e.tema.lower() 
+
+        resultado = []
+        if self._es_autor:
+            resultado = list(filter(coincide_autor, self._full_elementos)) 
+        else:
+            resultado = list(filter(coincide_tema, self._full_elementos)) 
+        
+        self.cargar_elementos_filtrados(resultado)
+                
 
 
 class LabelNota(Gtk.Box):
