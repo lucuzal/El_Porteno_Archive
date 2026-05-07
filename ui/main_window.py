@@ -4,19 +4,16 @@ import re
 
 
 from gi.repository import Gtk, Gdk, GdkPixbuf # type: ignore
-import logging
-
-
 import utils
 import webbrowser as wb
-
-from ui.widgets import VisualizadorNotas, EntradaComentarios, Etiquetas, EtiquetasGrupos, FechaRevista, MsgBoxSiNo, MsgBoxInfo, TextEditor, VisualizadorCartas
+from ui.widgets import VisualizadorNotas, EntradaComentarios, Etiquetas, EtiquetasGrupos, FechaRevista, MsgSiNo, MsgInfo, TextEditor, VisualizadorCartas
 from services import DBService, RevistaServices, NotaServices, AutorServices, TemaServices, AnalisisService, ServicesArchivoResumen
 from models import Revista, Hexagrama, StaffMiembro, Carta, Nota, Autor, Tema, ArchivoResumen
 from config import config
 from ui.dialogs import DialogCorreo
 from ui.notas_window import DialogNotas
 from application_state import EstadoDeAplicacion
+import logging
 
 # Config. logging
 logger = logging.getLogger(__name__)
@@ -302,8 +299,7 @@ class MainWindow(Gtk.Window):
         #ROW4 (Genero)
         ls_items = Gtk.ListStore(str, str)
         items = (["Fem", "Femenino"], ["Masc", "Masculino"], ["NoA","No aplica"], ["Otrx","Otrx"])
-        for i in items:
-            ls_items.append(i)
+        for i in items: ls_items.append(i)
         self.cb_genero_autor = Gtk.ComboBox.new_with_model(ls_items)
         rendered_text = Gtk.CellRendererText()
         self.cb_genero_autor.pack_start(rendered_text, True)
@@ -659,7 +655,7 @@ class MainWindow(Gtk.Window):
             texto = "Staff no cargado"
         else:
             for integrante in staff:
-                texto += f"{integrante.posicion}: {utils.get_nombre_completo(integrante)}\n"
+                texto += f"{integrante.posicion}: {integrante.nombre_completo()}\n"
 
         self.lb_staff.set_text(texto)
 
@@ -712,7 +708,8 @@ class MainWindow(Gtk.Window):
     def go_to_nota(self, id_nota):
         nota_dict = NotaServices.get_nota_por_id_nota(id_nota)
         if not nota_dict:
-            MsgBoxInfo(f"El id {id_nota} no corresponde a una nota existente")
+            mensaje = MsgInfo(f"El id {id_nota} no corresponde a una nota existente")
+            mensaje.show()
             return
         nota = Nota.desde_dict(nota_dict)
         if nota.revista != self.app_state.revista_seleccionada.id:
@@ -781,7 +778,7 @@ class MainWindow(Gtk.Window):
         if autores:
             for elemento in autores:
                 autor = Autor.desde_dic(elemento)
-                ls.append([autor.id, utils.get_nombre_completo(autor)])
+                ls.append([autor.id, autor.nombre_completo()])
         else:
             ls.append([0, "No hay resultados"])
 
@@ -978,7 +975,7 @@ class MainWindow(Gtk.Window):
         data_original = self.get_data_from_app_state_revista()
         data_actual = self.get_data_from_widgets_revista()
         if utils.changes_were_made(data_original, data_actual):
-            pregunta = MsgBoxSiNo()
+            pregunta = MsgSiNo()
             if pregunta.show() == Gtk.ResponseType.NO:
                 return
             self.actualizar_widgets_revista()
@@ -1002,7 +999,7 @@ class MainWindow(Gtk.Window):
     def ent_buscar_id_activate(self, widget):
         nota_id = self.ent_buscar_nota_por_id_en_revista.get_text()
         if not re.match(config.PATTERN_BUSCAR_ID, nota_id):
-            mensaje = MsgBoxInfo("El valor ingresado tiene un formato incorrecto")
+            mensaje = MsgInfo("El valor ingresado tiene un formato incorrecto")
             mensaje.show()
             self.ent_buscar_nota_por_id_en_revista.set_text("")
             return
@@ -1118,7 +1115,7 @@ class MainWindow(Gtk.Window):
         data_original = self.get_data_from_app_state_autor()
         data_widgets = self.get_data_from_widgets_autores()
         if utils.changes_were_made(data_original, data_widgets):
-            pregunta = MsgBoxSiNo()
+            pregunta = MsgSiNo()
             if pregunta.show() == Gtk.ResponseType.NO:
                 return
             self.actualizar_widgets_autor()
@@ -1175,7 +1172,7 @@ class MainWindow(Gtk.Window):
         widget.set_text("")
         if not text:
             return
-        pregunta = MsgBoxSiNo("Agregar_grupo")
+        pregunta = MsgSiNo("Agregar_grupo")
         if pregunta.show() == Gtk.ResponseType.NO:
             return
         AnalisisService.agregar_grupo_analisis(text)
@@ -1212,7 +1209,7 @@ class MainWindow(Gtk.Window):
     def ent_id_analisis_activate(self, widget):
         nota_id = widget.get_text()
         if not re.match(config.PATTERN_BUSCAR_ID, nota_id):
-            mensaje = MsgBoxInfo("El valor ingresado tiene un formato incorrecto")
+            mensaje = MsgInfo("El valor ingresado tiene un formato incorrecto")
             mensaje.show()
             self.ent_buscar_nota_por_id_en_revista.set_text("")
             return
@@ -1226,7 +1223,7 @@ class MainWindow(Gtk.Window):
             self.set_widgets_analisis_como_editables(True)
             self.up_label_nota_a_cargar_en_grupo_analisis(nota.titulo)
         else:
-            mensaje = MsgBoxInfo("El id no fue encontrado")
+            mensaje = MsgInfo("El id no fue encontrado")
             mensaje.show()
             self.app_state.nota_a_cargar_en_grupo_analisis = None
             self.up_label_nota_a_cargar_en_grupo_analisis()
@@ -1246,7 +1243,7 @@ class MainWindow(Gtk.Window):
             nota_id = self.app_state.nota_a_cargar_en_grupo_analisis.id
 
             if AnalisisService.comprobar_si_nota_ya_existe_en_grupo_analisis(nota_id, grupo_id):
-                mensaje = MsgBoxInfo("La nota ya ha sido ingresada a este grupo de análisis")
+                mensaje = MsgInfo("La nota ya ha sido ingresada a este grupo de análisis")
                 mensaje.show()
                 self.resetear_carga_nota_en_grupo_analisis()
                 return

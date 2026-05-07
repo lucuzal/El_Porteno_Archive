@@ -1,17 +1,14 @@
-from gi.repository import Gtk, Gdk, GdkPixbuf
-
-import utils
-from ui.widgets import EntradaComentarios, MsgBoxSiNo, MsgBoxInfo
+from gi.repository import Gtk #type: ignore
+from application_state import EstadoDeAplicacion
+from ui.widgets import EntradaComentarios, MsgSiNo, MsgInfo
 from models import Carta, Categoria
+from services import RevistaServices, AnalisisService, CartaServices
+from utils import changes_were_made
 
-from services import CartaServices, AnalisisService, RevistaServices
-import logging
-
-logger = logging.getLogger(__name__)
 
 class DialogCorreo(Gtk.Window):
 
-    def __init__(self, app_state):
+    def __init__(self, app_state: EstadoDeAplicacion):
         self.app_state = app_state
         Gtk.Window.__init__(self, title=f"Correo lector para la revista n° {self.app_state.revista_seleccionada}")
         self.set_border_width(10)
@@ -82,6 +79,7 @@ class DialogCorreo(Gtk.Window):
         self.panel_container.set_size_request(30, -1)
         Gtk.StyleContext.add_class(self.panel_container.get_style_context(), "sidebar-panel")
 
+        # adherir widgets al grid
         grid.attach(self.lb_cartas, 0,0,4,1)
         grid.attach(lb_remitente, 0,1,1,1)
         grid.attach(self.ent_remitente, 1,1,3,1)
@@ -324,8 +322,8 @@ class DialogCorreo(Gtk.Window):
             data_original = self.get_data_from_carta_app_state()
             data_actual = self.get_data_from_carta_widgets()
 
-            if utils.changes_were_made(data_original, data_actual):
-                pregunta = MsgBoxSiNo
+            if changes_were_made(data_original, data_actual):
+                pregunta = MsgSiNo
                 if pregunta.show() == Gtk.ResponseType.NO:
                     return
 
@@ -347,7 +345,7 @@ class DialogCorreo(Gtk.Window):
                 self.actualizar_correo()
                 self.cargar_carta(correo[-1])
         else:
-            if utils.changes_were_made(data_original, data_actual):
+            if changes_were_made(data_original, data_actual):
                 CartaServices.actualizar_carta(data_actual)
                 self.actualizar_correo()
                 for carta in self.app_state.revista_seleccionada.correo:
@@ -367,7 +365,7 @@ class DialogCorreo(Gtk.Window):
         carta_id = self.app_state.carta_seleccionada.id
 
         if row == -1:
-            msg = MsgBoxInfo("Seleccione un grupo para ingresar")
+            msg = MsgInfo("Seleccione un grupo para ingresar")
             msg.show()
             return
 
@@ -375,7 +373,7 @@ class DialogCorreo(Gtk.Window):
         grupo_analisis = Categoria.desde_dict({'id': valor[0], 'grupo': valor[1]})
 
         if grupo_analisis in self.app_state.carta_seleccionada.categoria_analisis:
-            msg = MsgBoxInfo("La carta ya está ingresada al grupo análisis")
+            msg = MsgInfo("La carta ya está ingresada al grupo análisis")
             msg.show()
             return
 
@@ -387,11 +385,3 @@ class DialogCorreo(Gtk.Window):
 
     def on_destroy_correo(self, widget):
         pass
-
-
-
-
-
-
-
-

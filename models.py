@@ -2,7 +2,7 @@ from datetime import date
 
 class Autor:
 
-    def __init__(self, id: int, nombre: str, apellido: str, genero: str, comentarios: str):
+    def __init__(self, nombre: str, apellido: str, genero: str, comentarios: str, id: int = None):
         self.id: int = id
         self.nombre: str = nombre
         self.apellido: str = apellido
@@ -25,6 +25,15 @@ class Autor:
                    apellido = fila[2],
                    genero = fila[3],
                    comentarios = fila[4])
+    
+    def nombre_completo(self, apellido_primero: bool = False) -> str:
+        if not self.nombre == "":
+            if not apellido_primero:
+                return f"{self.nombre} {self.apellido}"
+            else:
+                return f"{self.apellido}, {self.nombre}"
+        else:
+            return self.apellido
 
 
 class Carta:
@@ -142,6 +151,15 @@ class StaffMiembro:
                    nombre = fila[1], 
                    apellido = fila[2], 
                    genero = fila[3])
+    
+    def nombre_completo(self, apellido_primero: bool = False) -> str:
+        if not self.nombre == "":
+            if not apellido_primero:
+                return f"{self.nombre} {self.apellido}"
+            else:
+                return f"{self.apellido}, {self.nombre}"
+        else:
+            return self.apellido
 
 
 class Revista:
@@ -194,7 +212,7 @@ class Revista:
 
 class Tema:
 
-    def __init__(self, id: int, tema: str):
+    def __init__(self, tema: str, id: int = None):
         self.id: int = id
         self.tema: str = tema
 

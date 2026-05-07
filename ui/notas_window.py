@@ -2,7 +2,8 @@
 from traceback import print_exception
 
 from gi.repository import Gtk, Gdk, GdkPixbuf # type: ignore
-from ui.widgets import LabelNota, EntradaComentarios, ListaMulti
+from ui.widgets import LabelNota, EntradaComentarios
+from ui.widgets.lista_multi import ListaMulti
 from application_state import EstadoDeAplicacion
 from models import Nota
 from services import AutorServices, TemaServices

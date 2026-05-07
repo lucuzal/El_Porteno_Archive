@@ -7,6 +7,8 @@ from datetime import datetime
 from gi.repository import Gtk # type: ignore
 from html.parser import HTMLParser
 from services import CartaServices
+from rapidfuzz import process
+from nltk.stem import SnowballStemmer
 import html
 
 
@@ -251,7 +253,35 @@ def html_to_buffer(html_string, text_buffer, tag_map):
                 text_buffer.apply_tag(tag_obj, start_iter, end_iter)
         offset += length
 
+def buscar_similares(cadena: str, listado_a_comprobar: list[Autor | Tema], es_autor: bool, umbral: int = 70) -> set[str]:
+    
+    stemmer = SnowballStemmer("spanish")
 
+    resultado = set()
 
+    if len(cadena) < 4: return resultado
+
+    if es_autor:
+        elementos_existentes = [a.nombre_completo() for a in listado_a_comprobar]
+    else:
+        elementos_existentes = [t.tema for t in listado_a_comprobar]
+
+    
+    nuevo_lower = cadena.lower().strip()
+    nuevo_stem = stemmer.stem(nuevo_lower)
+
+    stems_existentes = {stemmer.stem(t.lower()): t for t in elementos_existentes}
+
+    for stem, elemento_original in stems_existentes.items():
+        if nuevo_stem == stem:
+            resultado.add(elemento_original)
+
+    similares = process.extract(nuevo_lower, elementos_existentes, limit=5, score_cutoff=umbral)
+    for tema, score, _ in similares:
+        resultado.add(tema)
+
+    resultado.discard(cadena)
+
+    return resultado
 
 

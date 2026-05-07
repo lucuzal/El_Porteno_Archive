@@ -296,9 +296,9 @@ class NotaServices:
         linea = ""
         for i, autor in enumerate(nota.autores, start=1):
             if i == len(nota.autores):
-                linea += utils.get_nombre_completo(autor)
+                linea += autor.nombre_completo()
             else:
-                linea += utils.get_nombre_completo(autor) + "; "
+                linea += autor.nombre_completo() + "; "
         return linea
 
 
