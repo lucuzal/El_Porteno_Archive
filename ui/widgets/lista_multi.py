@@ -110,6 +110,9 @@ class ListaMulti(Gtk.Box):
                 for e in self._lista:
                     ls.append([e.id, e.tema]) if e.id else ls.append([0, e.tema])
 
+    def get_selection(self) -> set[Autor | Tema]:
+        return self._lista
+ 
     def set_editable(self, editable: bool = True): #Configura el widget si es editable o no
         if editable:
             self._ent_search.set_editable(True)

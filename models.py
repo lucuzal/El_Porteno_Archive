@@ -129,6 +129,25 @@ class Nota:
             if n.id == id:
                 return n
         return None
+    
+    def to_dict(self) -> dict:
+        diccionario = {"id": self.id,
+                       "titulo": self.titulo,
+                       "paginas": self.paginas,
+                       "dossier": self.dossier,
+                       "seccion": self.seccion,
+                       "tipo": self.tipo,
+                       "original": self.original,
+                       "relacionado": self.relacionado,
+                       "relacionado_sexualidad": self.relacionado_sexualidad,
+                       "relacionado_memoria": self.relacionado_memoria,
+                       "comentarios": self.comentarios,
+                       "autores": self.autores,
+                       "temas": self.temas,
+                       "categorias": self.categorias,
+                       "analisis": self.analisis}
+        return diccionario
+
 
 class StaffMiembro:
 
