@@ -1,7 +1,7 @@
 import inspect
 from typing import Optional
 from database.querys import QUERY_REGISTRO_MODIFICACIONES
-
+from models import ResultadoQuery
 
 import mysql.connector as con
 from config import Config
@@ -55,10 +55,10 @@ class DataBaseConnection:
                 logger.error(f"Error al cerrar la conexión MySQL: {e}")
 
     @classmethod
-    def execute_query(cls, query: str, params: Optional[tuple] = None, select_multiple_results: Optional[bool] = False):
+    def execute_query(cls, query: str, params: Optional[tuple] = None, select_multiple_results: Optional[bool] = False) -> ResultadoQuery:
         conector = None
         cursor = None
-        result = None
+        resultado = ResultadoQuery()
 
         try:
             conector = cls._connection
@@ -70,12 +70,13 @@ class DataBaseConnection:
             cursor.execute(query, params or ())
 
             if query.strip().upper().startswith('SELECT'):
-                result = cursor.fetchall() if select_multiple_results else cursor.fetchone()
+                resultado.resultado = cursor.fetchall() if select_multiple_results else cursor.fetchone()
             else:
                 conector.commit()
 
                 if query.strip().upper().startswith(('INSERT', 'UPDATE', 'DELETE')):
-                    result = cursor.rowcount
+                    resultado.filas_modificadas = cursor.rowcount
+                    if query.strip().upper().startswith(('INSERT')): resultado.id_insertado = cursor.lastrowid
                     cursor.close()
                     cursor = None
 
@@ -89,7 +90,7 @@ class DataBaseConnection:
                     log_cursor.close()
 
             logger.debug(f"Query ejecutada: {query[:50]}...")
-            return result
+            return resultado
 
         except Exception as e:
             logger.error(f"Error en query: {query} - {e}")

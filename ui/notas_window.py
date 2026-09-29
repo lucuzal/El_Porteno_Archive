@@ -2,12 +2,12 @@
 from traceback import print_exception
 
 from gi.repository import Gtk # type: ignore
-from ui.widgets import LabelNota, EntradaComentarios, MsgSiNo
+from ui.widgets import LabelNota, EntradaComentarios, MsgSiNo, MsgInfo
 from ui.widgets.lista_multi import ListaMulti
 from application_state import EstadoDeAplicacion
 from models import Nota
-from services import AutorServices, TemaServices
-import utils
+from services import AutorServices, TemaServices, NotaServices
+from utils import to_autor, to_tema, changes_were_made
 
 class DialogNotas(Gtk.Window):
 
@@ -130,6 +130,7 @@ class DialogNotas(Gtk.Window):
         self.bt_editar.connect("clicked", self._bt_editar_clicked)
         self.bt_descartar.connect("clicked", self._bt_descartar_clicked)
         self.bt_salir.connect("clicked", self._bt_salir_clicked)
+        self.bt_guardar.connect("clicked", self._bt_guardar_clicked)
 
 
     def _iniciar(self):
@@ -273,30 +274,62 @@ class DialogNotas(Gtk.Window):
 
     def _cargar_lista_de_autores_en_lista_multi(self):
         lista_aut = AutorServices.get_lista_autores_por_nombre()
-        self.lista_autores.cargar_todos_los_elementos(utils.to_autor(lista_aut))
+        self.lista_autores.cargar_todos_los_elementos(to_autor(lista_aut))
 
     def _cargar_lista_de_temas_en_lista_multi(self):
         lista_tem = TemaServices.get_temas_busqueda()
-        self.lista_temas.cargar_todos_los_elementos(utils.to_tema(lista_tem))
+        self.lista_temas.cargar_todos_los_elementos(to_tema(lista_tem))
 
     def _get_data_from_widgets(self) -> dict:
-        diccionario = {"id": self.app_state.nota_seleccionada.id,
-                       "titulo": self.ent_titulo.get_text(),
-                       "paginas": self.ent_paginas.get_text(),
-                       "dossier": self.ent_dossier.get_text(),
-                       "seccion": self.ent_seccion.get_text(),
-                       "tipo": self.ent_tipo.get_text(),
-                       "original": self.chb_original.get_active(),
-                       "relacionado": self.chb_relacionado.get_active(),
-                       "relacionado_sexualidad": self.chb_relacionado_sexualidad.get_active(),
-                       "relacionado_memoria": self.chb_relacionado_memoria.get_active(),
-                       "comentarios": self.txt_comentario.get_text(),
-                       "autores": self.lista_autores.get_selection(),
-                       "temas": self.lista_temas.get_selection(),
-                       "categorias": self.app_state.nota_seleccionada.categorias,
-                       "analisis": self.app_state.nota_seleccionada.analisis}
+        if self._nota_new:
+            diccionario = {"id": None,
+                           "revista_id": self.app_state.revista_seleccionada.id, 
+                           "titulo": self.ent_titulo.get_text(),
+                           "paginas": self.ent_paginas.get_text(),
+                           "dossier": self.ent_dossier.get_text(),
+                           "seccion": self.ent_seccion.get_text(),
+                           "tipo": self.ent_tipo.get_text(),
+                           "original": self.chb_original.get_active(),
+                           "relacionado": self.chb_relacionado.get_active(),
+                           "relacionado_sexualidad": self.chb_relacionado_sexualidad.get_active(),
+                           "relacionado_memoria": self.chb_relacionado_memoria.get_active(),
+                           "comentarios": self.txt_comentario.get_text(),
+                           "autores": self.lista_autores.get_selection(),
+                           "temas": self.lista_temas.get_selection(),
+                           "categorias": set(),
+                           "analisis": set()}
+        else:
+            diccionario = {"id": self.app_state.nota_seleccionada.id,
+                            "revista_id": self.app_state.nota_seleccionada.revista,
+                            "titulo": self.ent_titulo.get_text(),
+                            "paginas": self.ent_paginas.get_text(),
+                            "dossier": self.ent_dossier.get_text(),
+                            "seccion": self.ent_seccion.get_text(),
+                            "tipo": self.ent_tipo.get_text(),
+                            "original": self.chb_original.get_active(),
+                            "relacionado": self.chb_relacionado.get_active(),
+                            "relacionado_sexualidad": self.chb_relacionado_sexualidad.get_active(),
+                            "relacionado_memoria": self.chb_relacionado_memoria.get_active(),
+                            "comentarios": self.txt_comentario.get_text(),
+                            "autores": self.lista_autores.get_selection(),
+                            "temas": self.lista_temas.get_selection(),
+                            "categorias": self.app_state.nota_seleccionada.categorias,
+                            "analisis": self.app_state.nota_seleccionada.analisis}
         return diccionario
-
+    
+    def _get_data_and_changes(self) -> tuple: #retorna los valores de la nota original y de los widgets y además devuelve True si se hicieron cambios
+        from_original = self.app_state.nota_seleccionada.to_dict()
+        from_widgets = self._get_data_from_widgets()
+        changes = changes_were_made(from_original, from_widgets)
+        return from_original, from_widgets, changes
+    
+    def empty_in_mandatory(self) -> bool:
+        """Chequea que no haya campos obligatorios vacíos, devolviendo True si los hubiera"""
+        empty = False
+        if self.ent_titulo.get_text() == "" or self.ent_tipo.get_text() == "" or self.ent_paginas.get_text() == "": empty = True
+        if len(self.lista_autores.get_selection()) == 0 or len(self.lista_temas.get_selection())==0: empty = True
+        return empty
+     
 
     
     #ACTIVAR WIDGETS POR SEÑALES
@@ -339,9 +372,8 @@ class DialogNotas(Gtk.Window):
             self._clear_widgets()
             self._cargar_nota(self.app_state.revista_seleccionada.notas[-1])
         else:
-            from_original = self.app_state.nota_seleccionada.to_dict()
-            from_widgets = self._get_data_from_widgets()
-            if utils.changes_were_made(from_original, from_widgets):
+            changes = self._get_data_and_changes()[2]
+            if changes:
                 pregunta = MsgSiNo()
                 if pregunta.show() == Gtk.ResponseType.NO:
                     return
@@ -351,3 +383,16 @@ class DialogNotas(Gtk.Window):
 
     def _bt_salir_clicked(self, widget):
         self.close()
+
+    def _bt_guardar_clicked(self, widget):
+
+        if self.empty_in_mandatory():
+            mensaje = MsgInfo("Los campos título, Tipo, página, Autor y Tema son obligatorios")
+            mensaje.show_all()
+            return
+
+        if self._nota_new:
+            nueva_nota = self._get_data_from_widgets()
+            NotaServices.guardar_nota_nueva(nueva_nota)
+        else:
+            pass

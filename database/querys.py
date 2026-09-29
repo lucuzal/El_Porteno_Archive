@@ -298,3 +298,8 @@ QUERY_GET_ARCHIVO_REVISTA_POR_REVISTA = """
     JOIN nota n ON n.id = a.nota_id
     WHERE n.revista_id = %s;
 """
+
+QUERY_GUARDAR_NUEVA_NOTA = """
+    INSERT INTO nota (revista_id, titulo, paginas, dossier, seccion, tipo, original, relevante, relevante_sexualidad, relevante_testimonio, comentarios)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+"""

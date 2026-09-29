@@ -132,6 +132,7 @@ class Nota:
     
     def to_dict(self) -> dict:
         diccionario = {"id": self.id,
+                       "revista_id": self.revista,
                        "titulo": self.titulo,
                        "paginas": self.paginas,
                        "dossier": self.dossier,
@@ -280,3 +281,11 @@ class ArchivoResumen:
                    parent_id = fila[1], 
                    titulo = fila[2], 
                    cuerpo_texto = fila[3])
+
+
+class ResultadoQuery:
+    
+    def __init__(self, resultado: tuple[dict] = None, filas_modificadas: int = None, id_insertado: int = None):
+        self.resultado: tuple[dict] = resultado
+        self.filas_modificadas: int = filas_modificadas
+        self.id_insertado: int = id_insertado

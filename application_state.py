@@ -18,8 +18,6 @@ class EstadoDeAplicacion:
         # Relacionado a Notas y formulario notas_window
         self.nota_seleccionada: Nota = None # Nota seleccionada con la que se inicia el formulario notas
         self.ventana_nota_abierta: bool = False # Si se encuentra o no abierto el formulario notas
-        self.nota_edicion_activa: bool = False
-        self.nota_new: bool = False
         self.nota_a_cargar_en_grupo_analisis: Nota = None
 
         # Relacionado a la pestaña autores

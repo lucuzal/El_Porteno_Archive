@@ -22,3 +22,5 @@ app.log
 **/database/elporteno_backup.sql
 **/app.log
 **/Pendientes_desarrollo.txt
+.Rproj.user
+.positai

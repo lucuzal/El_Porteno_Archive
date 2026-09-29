@@ -26,7 +26,7 @@ class DBService:
     def get_id_ultima_revista_abierta():
         results = None
         try:
-            results = DataBaseConnection.execute_query(query.QUERY_GET_LAST_ID_OPEN)
+            results = DataBaseConnection.execute_query(query.QUERY_GET_LAST_ID_OPEN).resultado
             return results['ultimo_nrev']
 
         except Exception as e:
@@ -39,7 +39,7 @@ class RevistaServices:
     def get_revista(id: int):
         revista = None
         try:
-            vs = DataBaseConnection.execute_query(query.QUERY_GET_REVISTA_POR_ID, params= (id,))
+            vs = DataBaseConnection.execute_query(query.QUERY_GET_REVISTA_POR_ID, params= (id,)).resultado
             revista = Revista.desde_dict(vs)
             return revista
         except Exception as e:
@@ -78,7 +78,7 @@ class RevistaServices:
     def get_autores(revista_id: int) -> tuple[dict] | None:
         autores_revista = None
         try:
-            vs = DataBaseConnection.execute_query(query.QUERY_GET_AUTORES_POR_REVISTA, params=(revista_id,), select_multiple_results=True)
+            vs = DataBaseConnection.execute_query(query.QUERY_GET_AUTORES_POR_REVISTA, params=(revista_id,), select_multiple_results=True).resultado
             autores_revista = vs
             return autores_revista
         except Exception as e:
@@ -96,7 +96,7 @@ class RevistaServices:
     @staticmethod
     def get_temas(revista_id: int) -> tuple[dict] | None:
         try:
-            return DataBaseConnection.execute_query(query.QUERY_GET_TEMAS_POR_REVISTA, params=(revista_id,), select_multiple_results=True) or []
+            return DataBaseConnection.execute_query(query.QUERY_GET_TEMAS_POR_REVISTA, params=(revista_id,), select_multiple_results=True).resultado or []
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY_GET_TEMAS_POR_REVISTA: {e}")
             return []
@@ -113,7 +113,7 @@ class RevistaServices:
     @staticmethod
     def get_grupos(revista_id: int) -> tuple[dict] | None:
         try:
-            return DataBaseConnection.execute_query(query.QUERY_GET_GRUPO_ANALISIS_POR_REVISTA, params=(revista_id,), select_multiple_results=True) or []
+            return DataBaseConnection.execute_query(query.QUERY_GET_GRUPO_ANALISIS_POR_REVISTA, params=(revista_id,), select_multiple_results=True).resultado or []
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY_GET_TEMAS_POR_REVISTA: {e}")
             return []
@@ -130,7 +130,7 @@ class RevistaServices:
     @staticmethod
     def get_archivo_resumen(revista_id: int) -> tuple[dict] | None:
         try:
-            return DataBaseConnection.execute_query(query.QUERY_GET_ARCHIVO_REVISTA_POR_REVISTA, params=(revista_id,), select_multiple_results=True) or []
+            return DataBaseConnection.execute_query(query.QUERY_GET_ARCHIVO_REVISTA_POR_REVISTA, params=(revista_id,), select_multiple_results=True).resultado or []
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY_GET_AUTORES_POR_REVISTA: {e}")
             return []
@@ -181,7 +181,7 @@ class RevistaServices:
             datos_actualizados['precio_nominal'],
             id_revista)
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_UPDATE_REVISTA_POR_ID, parametros)
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_UPDATE_REVISTA_POR_ID, parametros).filas_modificadas
             logger.info(f"Modificaciones en revista realizadas: {filas_afectadas} filas afectadas")
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY UPDATE REVISTA POR ID: {e}")
@@ -193,7 +193,7 @@ class StaffServices:
     def get_staff(id_revista: int):
         staff_completo = None
         try:
-            staff_completo = DataBaseConnection.execute_query(query.QUERY_GET_STAFF_POR_ID_REVISTA, params= (id_revista,), select_multiple_results=True)
+            staff_completo = DataBaseConnection.execute_query(query.QUERY_GET_STAFF_POR_ID_REVISTA, params= (id_revista,), select_multiple_results=True).resultado
             return staff_completo
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY GET STAFF POR ID: {e}")
@@ -205,7 +205,7 @@ class NotaServices:
     def get_notas(id_revista: int):
         notas = None
         try:
-            notas = DataBaseConnection.execute_query(query.QUERY_GET_NOTAS_POR_ID_REVISTA, params= (id_revista,), select_multiple_results=True)
+            notas = DataBaseConnection.execute_query(query.QUERY_GET_NOTAS_POR_ID_REVISTA, params= (id_revista,), select_multiple_results=True).resultado
             return notas
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY GET NOTAS POR ID_REVISTA: {e}")
@@ -222,7 +222,7 @@ class NotaServices:
     def get_nota_por_id_nota(id_nota: int):
         nota = None
         try:
-            nota = DataBaseConnection.execute_query(query.QUERY_GET_NOTA_POR_ID_NOTA, params= (id_nota,))
+            nota = DataBaseConnection.execute_query(query.QUERY_GET_NOTA_POR_ID_NOTA, params= (id_nota,)).resultado
             return nota
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY GET NOTA POR ID_NOTA: {e}")
@@ -231,7 +231,7 @@ class NotaServices:
     def get_autor_de_nota(id_nota: int):
         autores = None
         try:
-            autores = DataBaseConnection.execute_query(query.QUERY_GET_AUTOR_DE_NOTA_POR_NOTA_ID, params=(id_nota,), select_multiple_results=True)
+            autores = DataBaseConnection.execute_query(query.QUERY_GET_AUTOR_DE_NOTA_POR_NOTA_ID, params=(id_nota,), select_multiple_results=True).resultado
             return autores
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY GET AUTOR DE NOTA POR NOTA_ID: {e}")
@@ -254,7 +254,7 @@ class NotaServices:
     def get_categorias(nota_id: int):
         categorias = None
         try:
-            categorias = DataBaseConnection.execute_query(query.QUERY_GET_CATEGORIAS_POR_NOTA_ID, (nota_id,), select_multiple_results=True)
+            categorias = DataBaseConnection.execute_query(query.QUERY_GET_CATEGORIAS_POR_NOTA_ID, (nota_id,), select_multiple_results=True).resultado
             return categorias
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY GET CATEGORIAS POR NOTA_ID: {e}")
@@ -270,7 +270,7 @@ class NotaServices:
     def get_archivo_resumen(nota_id: int):
         archivos = None
         try:
-            archivos = DataBaseConnection.execute_query(query.QUERY_GET_ARCHIVO_RESUMEN_POR_NOTA_ID, params=(nota_id,), select_multiple_results=True)
+            archivos = DataBaseConnection.execute_query(query.QUERY_GET_ARCHIVO_RESUMEN_POR_NOTA_ID, params=(nota_id,), select_multiple_results=True).resultado
             return archivos or {}
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY GET ARCHIVO RESUMEN POR NOTA_ID: {e}")
@@ -279,7 +279,7 @@ class NotaServices:
     def get_temas_de_nota(id_nota: int):
         temas = None
         try:
-            temas = DataBaseConnection.execute_query(query.QUERY_GET_TEMAS_DE_NOTA_POR_NOTA_ID, params=(id_nota,), select_multiple_results=True)
+            temas = DataBaseConnection.execute_query(query.QUERY_GET_TEMAS_DE_NOTA_POR_NOTA_ID, params=(id_nota,), select_multiple_results=True).resultado
             return temas
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY GET TEMAS DE NOTA POR NOTA_ID: {e}")
@@ -300,6 +300,47 @@ class NotaServices:
             else:
                 linea += autor.nombre_completo() + "; "
         return linea
+    
+    @staticmethod
+    def guardar_nota_nueva(self, nota_nueva: dict):
+
+        nota_nueva['original'] = 1 if nota_nueva['original'] else 0         
+        nota_nueva['relacionado'] = 1 if nota_nueva['relacionado'] else 0
+        nota_nueva['relacionado_sexualidad'] = 1 if nota_nueva['relacionado_sexualidad'] else 0
+        nota_nueva['relacionado_memoria'] = 1 if nota_nueva['relacionado_memoria'] else 0
+
+        try:
+            reusltado_query = DataBaseConnection.execute_query(query.QUERY_GUARDAR_NUEVA_NOTA, params=(nota_nueva['revista_id'],
+                                                                                                       nota_nueva['titulo'],
+                                                                                                       nota_nueva['paginas'],
+                                                                                                       nota_nueva['dossier'],
+                                                                                                       nota_nueva['seccion'],
+                                                                                                       nota_nueva['tipo'],
+                                                                                                       nota_nueva['original'],
+                                                                                                       nota_nueva['relevante'],
+                                                                                                       nota_nueva['relevante_sexualidad'],
+                                                                                                       nota_nueva['relevante_testimonio'],
+                                                                                                       nota_nueva['comentarios']))
+            
+            logger.info(f"Se ha guardado una nueva carta_ {filas_afectadas} filas afectadas")
+        except Exception as e:
+            logger.error(f"Falló el query AGREGAR NUEVA CARTA: {e}")
+
+                        # "id": None,
+                        # "titulo": self.ent_titulo.get_text(),
+                        # "paginas": self.ent_paginas.get_text(),
+                        # "dossier": self.ent_dossier.get_text(),
+                        # "seccion": self.ent_seccion.get_text(),
+                        # "tipo": self.ent_tipo.get_text(),
+                        # "original": self.chb_original.get_active(),
+                        # "relacionado": self.chb_relacionado.get_active(),
+                        # "relacionado_sexualidad": self.chb_relacionado_sexualidad.get_active(),
+                        # "relacionado_memoria": self.chb_relacionado_memoria.get_active(),
+                        # "comentarios": self.txt_comentario.get_text(),
+                        # "autores": self.lista_autores.get_selection(),
+                        # "temas": self.lista_temas.get_selection(),
+                        # "categorias": set(),
+                        # "analisis": set()}
 
 
 class CartaServices:
@@ -308,7 +349,7 @@ class CartaServices:
     def get_cartas(id_revista: int):
         correo = None
         try:
-            correo = DataBaseConnection.execute_query(query.QUERY_GET_CARTAS_POR_REVISTA_ID, params=(id_revista,), select_multiple_results=True)
+            correo = DataBaseConnection.execute_query(query.QUERY_GET_CARTAS_POR_REVISTA_ID, params=(id_revista,), select_multiple_results=True).resultado
             return correo
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY GET CARTAS POR REVISTA_ID: {e}")
@@ -328,7 +369,7 @@ class CartaServices:
     def get_grupo_analisis(carta_id: int):
         categorias = set()
         try:
-            tabla = DataBaseConnection.execute_query(query.QUERY_GET_GRUPOS_ANALISIS_PARA_CARTA, params=(carta_id,), select_multiple_results=True)
+            tabla = DataBaseConnection.execute_query(query.QUERY_GET_GRUPOS_ANALISIS_PARA_CARTA, params=(carta_id,), select_multiple_results=True).resultado
             for elemento in tabla:
                 carga = Categoria.desde_dict(elemento)
                 categorias.add(carga)
@@ -341,7 +382,7 @@ class CartaServices:
     def get_archivo_resumen_de_carta_por_id_carta(carta_id):
         archivo_resumen = set()
         try:
-            tabla = DataBaseConnection.execute_query(query.QUERY_GET_ARCHIVO_RESUMEN_CARTA_POR_ID_CARTA, params=(carta_id,), select_multiple_results=True)
+            tabla = DataBaseConnection.execute_query(query.QUERY_GET_ARCHIVO_RESUMEN_CARTA_POR_ID_CARTA, params=(carta_id,), select_multiple_results=True).resultado
             if tabla:
                 for reg in tabla:
                     carga = ArchivoResumen.desde_dict(reg)
@@ -353,7 +394,7 @@ class CartaServices:
     @staticmethod
     def borrar_archivo_resumen_en_carta(id_analisis: int):
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_DELETE_ARCHIVO_RESUMEN_CARTA, params=(id_analisis,))
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_DELETE_ARCHIVO_RESUMEN_CARTA, params=(id_analisis,)).filas_modificadas
             logger.info(f"Se ha eliminado el archivo resumen correspondiente a la carta: {filas_afectadas} filas afectadas")
         except Exception as e:
             logger.error(f"Falló la eliminación del archivo resumen de la carta: {e}")
@@ -361,7 +402,7 @@ class CartaServices:
     @staticmethod
     def actualizar_titulo_de_archivo_resumen(id_analisis: int, titulo: str):
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_ACTUALIZAR_TITULO_ARCHIVO_RESUMEN_CARTA, params=(titulo, id_analisis))
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_ACTUALIZAR_TITULO_ARCHIVO_RESUMEN_CARTA, params=(titulo, id_analisis)).filas_modificadas
             logger.info(f"Se ha actualizado el título de un arcihvo resumen: {filas_afectadas} filas afectadas")
         except Exception as e:
             logger.error(f"Falló el query ACTUALIZAR TITULO DE ARCHIVO RESUMEN EN CARTA: {e}")
@@ -370,7 +411,9 @@ class CartaServices:
     def guardar_nueva_carta(carta: dict, revista_id):
         relevante = 1 if carta['relevante'] else 0
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_GUARDAR_NUEVA_CARTA, params=(revista_id, carta['remitente'], carta['tema'], relevante))
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_GUARDAR_NUEVA_CARTA, params=(revista_id, 
+                                                                                                        carta['remitente'], 
+                                                                                                        carta['tema'], relevante)).filas_modificadas
             logger.info(f"Se ha guardado una nueva carta_ {filas_afectadas} filas afectadas")
         except Exception as e:
             logger.error(f"Falló el query AGREGAR NUEVA CARTA: {e}")
@@ -379,7 +422,7 @@ class CartaServices:
     def actualizar_carta(carta: dict):
         relevante = 1 if carta['relevante'] else 0
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_UPDATE_CARTA, params=(carta['remitente'], carta['tema'], relevante, carta["id"]))
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_UPDATE_CARTA, params=(carta['remitente'], carta['tema'], relevante, carta["id"])).filas_modificadas
             logger.info(f"Se ha actualizado una carta: {filas_afectadas} filas afectadas")
         except Exception as e:
             logger.error(f"Falló la querry UPDATE CARTA")
@@ -387,7 +430,7 @@ class CartaServices:
     @staticmethod
     def agregar_carta_a_grupo_de_analisis(carta_id, grupo_id):
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_ADD_CARTA_A_GRUPO_ANALISIS, params=(carta_id, grupo_id))
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_ADD_CARTA_A_GRUPO_ANALISIS, params=(carta_id, grupo_id)).filas_modificadas
             logger.info(f"Se ha agregado una carta a un grupo de análisis: {filas_afectadas} filas afectadas")
         except Exception as e:
             logger.error(f"Falló la query ADD CARTA: {e}")
@@ -395,7 +438,7 @@ class CartaServices:
     @staticmethod
     def quitar_carta_del_grupo_de_analisis(carta_id, grupo_id):
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_DELETE_CARTA_DE_GRUPO_ANALISIS, params=(carta_id, grupo_id))
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_DELETE_CARTA_DE_GRUPO_ANALISIS, params=(carta_id, grupo_id)).filas_modificadas
             logger.info(f"Se ha quitado una carta del grupo de análisis: {filas_afectadas} filas afectadas")
         except Exception as e:
             logger.error(f"Falló la query Quitar Carta del grupo de análisis: {e}")
@@ -408,7 +451,7 @@ class AutorServices:
         autores = None
         try:
             nombre_con_comodines = f"%{nombre}%"
-            autores = DataBaseConnection.execute_query(query.QUERY_GET_AUTORES_POR_NOMBRE, params=(nombre_con_comodines,), select_multiple_results=True)
+            autores = DataBaseConnection.execute_query(query.QUERY_GET_AUTORES_POR_NOMBRE, params=(nombre_con_comodines,), select_multiple_results=True).resultado
             return autores
         except Exception as e:
             logger.error(f"Falló la ejecucion sql QUERY GET AUTORES POR NOMBRE: {e}")
@@ -417,7 +460,7 @@ class AutorServices:
     def get_autor_por_id_autor(id_autor: int):
         autor = None
         try:
-            autor = DataBaseConnection.execute_query(query.QUERY_GET_AUTOR_POR_ID_NOMBRE, params=(id_autor,), select_multiple_results=False)
+            autor = DataBaseConnection.execute_query(query.QUERY_GET_AUTOR_POR_ID_NOMBRE, params=(id_autor,), select_multiple_results=False).resultado
             return autor
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY GET AUTOR POR ID_NOMBRE: {e}")
@@ -426,7 +469,7 @@ class AutorServices:
     def get_notas_de_autor(id_autor: int):
         notas = None
         try:
-            notas = DataBaseConnection.execute_query(query.QUERY_GET_NOTAS_POR_AUTOR, (id_autor,), True)
+            notas = DataBaseConnection.execute_query(query.QUERY_GET_NOTAS_POR_AUTOR, (id_autor,), True).resultado
             return notas
         except Exception as e:
             logger.error(f"Falló la ejecución sql QUERY GET NOTAS DE AUTOR")
@@ -441,7 +484,7 @@ class AutorServices:
             id_autor
         )
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_UPDATE_AUTOR, parametros)
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_UPDATE_AUTOR, parametros).filas_modificadas
             logger.info(f"Modificaciones realizadas en autor: {filas_afectadas} filas afectadas")
         except Exception as e:
             logger.error(f"Falló la ejecución de QUERRY UPDATE AUTOR: {e}")
@@ -453,7 +496,7 @@ class TemaServices:
 
         try:
             busqueda_con_comodines = f"%{busqueda}%"
-            temas = DataBaseConnection.execute_query(query.QUERY_GET_TEMAS_POR_TEMA, (busqueda_con_comodines,), True)
+            temas = DataBaseConnection.execute_query(query.QUERY_GET_TEMAS_POR_TEMA, (busqueda_con_comodines,), True).resultado
             return temas
         except Exception as e:
             logger.error(f"Falló la ejecución de GET TEMAS POR TEMAS: {e}")
@@ -471,7 +514,7 @@ class TemaServices:
         sql_query += ") ORDER BY t.tema;"
 
         try:
-            temas = DataBaseConnection.execute_query(sql_query, params=parametros, select_multiple_results=True)
+            temas = DataBaseConnection.execute_query(sql_query, params=parametros, select_multiple_results=True).resultado
             return temas
         except Exception as e:
             logger.error(f"Falló la ejecución de GET TEMAS SEGUN TAGS SELECCIONADOS DINAMICO: {e}")
@@ -498,7 +541,7 @@ class TemaServices:
             """
 
             try:
-                notas = DataBaseConnection.execute_query(sql_query, params=parametros, select_multiple_results=True)
+                notas = DataBaseConnection.execute_query(sql_query, params=parametros, select_multiple_results=True).resultado
                 return notas
             except Exception as e:
                 logger.error(f"Falló la ejecución de GET NOTAS POR TEMAS DINAMICO: {e}")
@@ -512,7 +555,7 @@ class AnalisisService:
     def get_grupos_analisis():
         categorias = []
         try:
-            grupos = DataBaseConnection.execute_query(query.QUERY_GET_GRUPOS_ANALISIS, select_multiple_results=True)
+            grupos = DataBaseConnection.execute_query(query.QUERY_GET_GRUPOS_ANALISIS, select_multiple_results=True).resultado
             for elemento in grupos:
                 carga = Categoria.desde_dict(elemento)
                 categorias.append(carga)
@@ -524,7 +567,7 @@ class AnalisisService:
     @staticmethod
     def agregar_grupo_analisis(nombre: str):
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_AGREGAR_GRUPO_ANALISIS, params=(nombre,))
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_AGREGAR_GRUPO_ANALISIS, params=(nombre,)).filas_modificadas
             logger.info(f"Consulta Agregar grupo análisis ejecutada: filas modificadas {filas_afectadas}")
         except Exception as e:
             logger.error(f"Falló la ejecución de la query AGREGAR GRUPO ANALISIS: {e}")
@@ -533,7 +576,7 @@ class AnalisisService:
     def get_notas_por_grupo_analisis(id_grupo: int):
         notas = None
         try:
-            notas = DataBaseConnection.execute_query(query.QUERY_GET_NOTAS_POR_GRUPO_ANALISIS, params=(id_grupo,), select_multiple_results=True)
+            notas = DataBaseConnection.execute_query(query.QUERY_GET_NOTAS_POR_GRUPO_ANALISIS, params=(id_grupo,), select_multiple_results=True).resultado
             return notas
         except Exception as e:
             logger.error(f"Falló la ejecución de la query GET NOTAS POR GRUPO ANALISIS: {e}")
@@ -542,7 +585,7 @@ class AnalisisService:
     def get_cartas_por_grupo_analisis(id_grupo: int):
         notas = None
         try:
-            notas = DataBaseConnection.execute_query(query.QUERY_GET_CARTAS_POR_GRUPO_ANALISIS, params=(id_grupo,), select_multiple_results=True)
+            notas = DataBaseConnection.execute_query(query.QUERY_GET_CARTAS_POR_GRUPO_ANALISIS, params=(id_grupo,), select_multiple_results=True).resultado
             return notas
         except Exception as e:
             logger.error(f"Falló la ejecución de la query GET NOTAS POR GRUPO ANALISIS: {e}")
@@ -550,7 +593,7 @@ class AnalisisService:
     @staticmethod
     def cargar_nota_en_grupo_de_analisis(nota_id: int, grupo_id: int):
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_CARGAR_NOTA_AL_GRUPO_ANALISIS, params=(nota_id, grupo_id))
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_CARGAR_NOTA_AL_GRUPO_ANALISIS, params=(nota_id, grupo_id)).filas_modificadas
             logger.info(f"Consulta Agregar nota a grupo de análisis ejecutada: {filas_afectadas} filas afectadas")
         except Exception as e:
             logger.error(f"Falló la ejecución query de Agregar nota a grupo de análisis: {e}")
@@ -566,7 +609,7 @@ class AnalisisService:
     @staticmethod
     def quitar_nota_de_grupo_de_analisis (nota_id: int, grupo_id: int):
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_DELETE_NOTA_DE_GRUPO_DE_ANALISIS, params=(nota_id, grupo_id))
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_DELETE_NOTA_DE_GRUPO_DE_ANALISIS, params=(nota_id, grupo_id)).filas_modificadas
             logger.info(f"Se ha quitado la nota seleccionada del agrupamiento: {filas_afectadas} filas afectadas en DB")
         except Exception as e:
             logger.error(f"Error al ejecutar la query QUITAR NOTA DE AGRUPAMIENTO: {e}")
@@ -577,7 +620,7 @@ class ServicesArchivoResumen:
     @staticmethod
     def agregar_archivo_resumen(nota_id: int, cuerpo_texto: str, titulo: str):
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_AGREGAR_ARCHIVO_RESUMEN, params=(nota_id, cuerpo_texto, titulo))
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_AGREGAR_ARCHIVO_RESUMEN, params=(nota_id, cuerpo_texto, titulo)).filas_modificadas
             logger.info(f"Se ha agregado un archivo resumen: {filas_afectadas} filas afectadas")
         except Exception as e:
             logger.error(f"Error al ejecutar la query AGREGAR ARCHIVO RESUMEN: {e}")
@@ -585,7 +628,7 @@ class ServicesArchivoResumen:
     @staticmethod
     def agregar_archivo_resumen_carta(carta_id: int, cuerpo_texto: str, titulo: str):
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_AGREGAR_ARCHIVO_RESUMEN_CARTA, params=(carta_id, cuerpo_texto, titulo))
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_AGREGAR_ARCHIVO_RESUMEN_CARTA, params=(carta_id, cuerpo_texto, titulo)).filas_modificadas
             logger.info(f"Se ha agregado un archivo resumen para carta: {filas_afectadas} filas afectadas")
         except Exception as e:
             logger.error(f"Error al ejecutar la QUERY AGREGAR ARCHIVO RESUMEN EN CARTA: {e}")
@@ -593,7 +636,7 @@ class ServicesArchivoResumen:
     @staticmethod
     def modificar_archivo_resumen(id_analisis, cuerpo_texto, titulo):
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_MODIFICAR_ARCHIVO_RESUMEN, params=(cuerpo_texto, titulo, id_analisis))
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_MODIFICAR_ARCHIVO_RESUMEN, params=(cuerpo_texto, titulo, id_analisis)).filas_modificadas
             logger.info(f"Se ha modificado el archivo resumen: {filas_afectadas} una fila afectada en la DB")
         except Exception as e:
             logger.error(f"Error al ejecutar la query MODIFICAR ARCHIVO RESUMEN: {e}")
@@ -601,7 +644,7 @@ class ServicesArchivoResumen:
     @staticmethod
     def modificar_archivo_resumen_carta(id_analisis, cuerpo_texto, titulo):
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_MODIFICAR_ARCHIVO_RESUMEN_CARTA, params=(cuerpo_texto, titulo, id_analisis))
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_MODIFICAR_ARCHIVO_RESUMEN_CARTA, params=(cuerpo_texto, titulo, id_analisis)).filas_modificadas
             logger.info(f"Se ha modificado el archivo resumen de carta: {filas_afectadas} filas afectadas")
         except Exception as e:
             logger.error(f"Error al ejectuar la query MODIFICAR ARCHIVO RESUMEN PARA CARTA: {e}")
@@ -609,7 +652,7 @@ class ServicesArchivoResumen:
     @staticmethod
     def get_archivo_resumen_por_id(analisis_id):
         try:
-            archivo_resumen = DataBaseConnection.execute_query(query.QUERY_GET_ARCHIVO_RESUMEN, params=(analisis_id,))
+            archivo_resumen = DataBaseConnection.execute_query(query.QUERY_GET_ARCHIVO_RESUMEN, params=(analisis_id,)).resultado
             return archivo_resumen
         except Exception as e:
             logger.error(f"Error al ejecutar la query MODIFICAR ARCHIVO RESUMEN: {e}")
@@ -617,7 +660,7 @@ class ServicesArchivoResumen:
     @staticmethod
     def get_archivo_resumen_carta_por_id(analisis_id):
         try:
-            archivo_resumen = DataBaseConnection.execute_query(query.QUERY_GET_ARCHIVO_RESUMEN_CARTA_POR_ID, params=(analisis_id,))
+            archivo_resumen = DataBaseConnection.execute_query(query.QUERY_GET_ARCHIVO_RESUMEN_CARTA_POR_ID, params=(analisis_id,)).resultado
             return archivo_resumen
         except Exception as e:
             logger.error(f"Error al ejecutar la query get archivo resumen carta por id: {e}")
@@ -638,7 +681,7 @@ class ServicesArchivoResumen:
     @staticmethod
     def delete_archivo_resumen_por_id(analisis_id):
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_DELETE_ARCHIVO_RESUMEN, params=(analisis_id,))
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_DELETE_ARCHIVO_RESUMEN, params=(analisis_id,)).filas_modificadas
             logger.info(f"Se ha borrado el archivo resumen en la base de datos: {filas_afectadas} filas afectadas")
         except Exception as e:
             logger.error(f"Ha habido un error al ejecutar la query DELETE ARCHIVO RESUMEN: {e}")
@@ -646,7 +689,7 @@ class ServicesArchivoResumen:
     @staticmethod
     def actualizar_titulo(analisis_id: int, titulo: str):
         try:
-            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_ACTUALIZAR_TITULO, params=(titulo, analisis_id))
+            filas_afectadas = DataBaseConnection.execute_query(query.QUERY_ACTUALIZAR_TITULO, params=(titulo, analisis_id)).filas_modificadas
             logger.info(f"Se ha cambiado el título del archivo resumen: {filas_afectadas} filas afectadas")
         except Exception as e:
             logger.error(f"Ha habido un error al ejecutar la query ACTUALIZAR TITULO: {e}")
